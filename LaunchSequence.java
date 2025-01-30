@@ -5,11 +5,10 @@ public class LaunchSequence {
 
     public static void main(String[] args) {
 
-    int time = 10;
-    double fuelBurned;
-    double altitude;
-    Timer timer = new Timer();
 
+    // Countdown from 10
+    int time = 10;
+    Timer timer = new Timer();
     timer.scheduleAtFixedRate(new TimerTask() {
     int countDown = time;
 
@@ -23,7 +22,6 @@ public class LaunchSequence {
     countDown--;
     }
     }, 0, 1000);
-    
     }
 
 }

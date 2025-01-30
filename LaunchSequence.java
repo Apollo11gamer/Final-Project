@@ -22,6 +22,25 @@ public class LaunchSequence {
     countDown--;
     }
     }, 0, 1000);
-    }
 
+
+    // 30 Second timer
+    int spacewalkTime = 30;
+    Timer spacewalkTimer = new Timer();
+    spacewalkTimer.scheduleAtFixedRate(new TimerTask() {
+    int spacewalkCountdown = spacewalkTime;
+
+    public void run() {
+    System.out.println(spacewalkCountdown);
+
+    if (spacewalkCountdown <= 0) {
+    System.out.println("Spacewalk is done.");
+    spacewalkTimer.cancel();
+    }
+    spacewalkCountdown--;
+    }
+    }, 0, 1000);
+    
+
+}
 }

@@ -17,7 +17,7 @@ public class LaunchSequence {
     System.out.println(countDown);
 
     if (countDown <= 0) {
-    System.out.println("Timer is done");
+    System.out.println("LAUNCH");
     timer.cancel();
     }
     countDown--;

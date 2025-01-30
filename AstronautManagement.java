@@ -28,7 +28,8 @@ System.out.println("What is the Email of the astronaut?");
     
     if (input.matches(regex)) {
         System.out.println("The input contains the required characters.");
-    } else {
+    }
+    else {
         System.out.println("The input does not contain the required characters.");
     }
     System.out.println("What is the weight of the astronaut?");

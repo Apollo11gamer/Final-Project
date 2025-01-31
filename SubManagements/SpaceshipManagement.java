@@ -1,9 +1,10 @@
+package SubManagements;
 import java.util.Scanner;
 
 
 public class SpaceshipManagement {
     
-public static void main(String[] args) {
+public static void Space() {
 
 String shuttle;
 double fuel;
@@ -25,7 +26,7 @@ System.out.println("How many astronauts will be a part of the crew?");
     kbd.close();
 
     if (fuel > 40000) {
-        System.out.println("The ship " + shuttle + " will be attempting to launch to the moon. There are " + astronauts + " members with " + fuel + " pounds of fuel to work with." );
+        System.out.println("The ship " + shuttle + " will be attempting to launch to the moon. There are " + astronauts + " member(s) with " + fuel + " pounds of fuel to work with." );
     }
     else {
         System.out.println(shuttle + " requires more fuel to leave the planet, please try again.");

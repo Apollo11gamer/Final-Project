@@ -5,6 +5,11 @@ public class LaunchSequence {
 
     public static void main(String[] args) {
 
+<<<<<<< Updated upstream
+=======
+
+    // 10 Second Countdown
+>>>>>>> Stashed changes
     int time = 10;
     double fuelBurned;
     double altitude;
@@ -23,6 +28,36 @@ public class LaunchSequence {
     countDown--;
     }
     }, 0, 1000);
+<<<<<<< Updated upstream
+=======
+    
+
+    // 30 Second Timer
+    int spacewalkTime = 30;
+    Timer spacewalkTimer = new Timer();
+
+    timer.scheduleAtFixedRate(new TimerTask() {
+    int spacewalkCountdown = spacewalkTime;
+
+    public void run() {
+    System.out.println(spacewalkCountdown);
+
+    if (spacewalkCountdown <= 0) {
+    System.out.println("SPACEWALKED");
+    spacewalkTimer.cancel();
+    }
+    spacewalkCountdown--;
+    }
+    }, 0, 1000);
+
+    }
+
+
+    // Flight and fuel
+    double altitude;
+    double fuelBurned;
+
+>>>>>>> Stashed changes
     
     }
 

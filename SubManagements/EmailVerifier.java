@@ -1,3 +1,4 @@
+package SubManagements;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -5,7 +6,7 @@ import java.util.regex.Pattern;
 public class EmailVerifier {
     
     public static void Email() {
-        Scanner scanner = new Scanner(System.in);
+        Scanner kbd = new Scanner(System.in);
 
         // Regex pattern for validating email
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
@@ -14,7 +15,7 @@ public class EmailVerifier {
         System.out.println("Enter an email address to verify:");
 
         while (true) {
-            String email = scanner.nextLine();
+            String email = kbd.nextLine();
 
             // Check if the email matches the pattern
             Matcher matcher = pattern.matcher(email);
@@ -23,6 +24,8 @@ public class EmailVerifier {
                 break;
             } else {
                 System.out.println("Invalid email address. Please try again.");
+            kbd.close();
+
             }
         }
 

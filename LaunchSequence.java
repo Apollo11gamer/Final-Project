@@ -3,7 +3,7 @@ import java.util.TimerTask;
 
 public class LaunchSequence {
 
-    public static void main(String[] args) {
+    public static void Countdown() {
 
     int time = 10;
     double fuelBurned;

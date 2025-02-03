@@ -4,78 +4,52 @@ import java.util.Scanner;
 
 public class LaunchSequence {
 
-
-    public static void CountDowns() {
-
-        // Flight and fuel
-        double altitude = 0;
-        double fuelBurned = 0;
-        double speed;
-        double currentFuel;
-
-        currentFuel =- fuelBurned;
-        speed = fuelBurned * 30;
-
-        // 10 Second Countdown
-        int time = 10;
-        Timer timer = new Timer();
-
-        timer.scheduleAtFixedRate(new TimerTask() {
-        int countDown = time;
-
-        public void run() {
-        System.out.println(countDown);
-        
-
-        if (countDown <= 0) {
-        System.out.println("LAUNCHED");
-        timer.cancel();
-        }
-        countDown--;
-        }
-        }, 0, 1000);
-        
-
-        if (altitude >= 70000) {
-
-        // 30 Second Timer
-        int spacewalkTime = 30;
-        Timer spacewalkTimer = new Timer();
-
-        timer.scheduleAtFixedRate(new TimerTask() {
-        int spacewalkCountdown = spacewalkTime;
-
-        public void run() {
-        System.out.println(spacewalkCountdown);
-
-        if (spacewalkCountdown <= 0) {
-        System.out.println("SPACEWALKED");
-        spacewalkTimer.cancel();
-        }
-        spacewalkCountdown--;
-        }
-        }, 0, 1000);
-
-        }
-        else if (altitude < 70000) {
-        System.out.println("Spacecraft did not make it.");
-        }
-
+    public static void main(String[] args) {
+    // Countdown from 10 to launch off
+    // m/s = fuelBurned x 30
+    // altitude = 0 meters, to altitude = 70,000 meters
+    // once 70,000 meters is reached, 30 second timer starts for spacewalk
+    // When altitude reaches 0 meters, display that the ship has landed
+    tenSecondCountdown();
+    simulateFlight();
     }
-}
+    }
 
-    // code that may be helpful:
+    public static void tenSecondCountdown() {
+    Timer timer = new Timer();
 
-    public static void simulateFlight(double currentFuel, double fuelBurned, double speed) {
+    timer.scheduleAtFixedRate(new TimerTask() {
+    int time = 10;
+    int countDown = time;
+
+    public void run() {
+    System.out.println(countDown);
+
+    if (countDown <= 0) {
+    System.out.println("LAUNCHED");
+    timer.cancel();
+    }
+    countDown--;
+    }
+    }, 0, 1000);
+    
+    }
+
+    public static void simulateFlight() {
         //Simulation of rocket flight mechanics after countdown
-        double altitude = 0;
-        double currentSpeed = speed;
-        int spacewalkTime = 30; // Spacewalk time
         Timer flightTimer = new Timer();
 
         // Start flight simulation
         flightTimer.scheduleAtFixedRate(new TimerTask() {
         public void run() {
+
+        double currentFuel = 100;
+        double fuelBurned = 10;
+        double speed = 100;
+        double altitude = 0;
+        double currentSpeed = speed;
+        int spacewalkTime = 30; // Spacewalk time
+
         // Decrease fuel
         currentFuel -= fuelBurned;
         // Increase speed based on fuel burn
@@ -112,6 +86,5 @@ public class LaunchSequence {
         }
     }
 }, 0, 1000); 
-// Simulate flight every second
-    
+// Simulate flight every second   
 }

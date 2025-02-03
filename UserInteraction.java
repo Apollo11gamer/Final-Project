@@ -1,4 +1,4 @@
-public class UserInteraction implements AstronautManagement, SpaceshipManagement{
+public class UserInteraction {
     
     public static void main(String[] args) {
     

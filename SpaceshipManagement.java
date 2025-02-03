@@ -1,7 +1,6 @@
-
 import java.util.Scanner;
 
-public interface SpaceshipManagement {
+public class SpaceshipManagement{
     
 public static void Space() {
 

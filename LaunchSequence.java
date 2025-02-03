@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class LaunchSequence {
 
-    public static void Countdown() {
+    public static void CountDowns() {
 
         // Flight and fuel
         double altitude = 0;

@@ -1,4 +1,4 @@
-package password;
+package PasswordFunction;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;

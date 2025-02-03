@@ -32,4 +32,5 @@ System.out.println("What is the maximum amount of astronauts that can be a part 
     }
 
 }
+
 }

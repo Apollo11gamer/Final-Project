@@ -1,7 +1,7 @@
-package SubManagements;
+
 import java.util.Scanner;
 
-public class SpaceshipManagement {
+public interface SpaceshipManagement {
     
 public static void Space() {
 

@@ -1,4 +1,4 @@
-package PasswordFunction;
+package password;
 import java.util.Scanner;
 
 public class Password {

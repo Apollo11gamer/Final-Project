@@ -1,6 +1,8 @@
 import java.util.Scanner;
-import PasswordFunction.Password;
+
 import SubManagements.EmailVerifier;
+import SubManagements.SpaceshipManagement;
+import password.Password;
 
 public class AstronautManagement {
     public static void main(String[] args) {

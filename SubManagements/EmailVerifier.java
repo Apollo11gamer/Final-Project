@@ -24,7 +24,6 @@ public class EmailVerifier {
                 break;
             } else {
                 System.out.println("Invalid email address. Please try again.");
-            kbd.close();
 
             }
         }

@@ -26,9 +26,13 @@ public class PasswordStorage {
     public static void savePassword(String site, String password) throws Exception {
         String encryptedPassword = EncryptionUtil.encrypt(password);
         passwordMap.put(site, encryptedPassword);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
-            writer.write(site + ":" + encryptedPassword);
-            writer.newLine();
+        
+        // Write the entire passwordMap to the file (overwrite mode)
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
+            for (Map.Entry<String, String> entry : passwordMap.entrySet()) {
+                writer.write(entry.getKey() + ":" + entry.getValue());
+                writer.newLine();
+            }
         }
     }
 

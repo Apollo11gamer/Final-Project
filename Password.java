@@ -11,4 +11,9 @@ Scanner kbd = new Scanner(System.in);
 
 
 }
+
+    public static void pass() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'pass'");
+    }
 }

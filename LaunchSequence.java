@@ -1,90 +1,92 @@
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Scanner;
 
 public class LaunchSequence {
+    
+    static double currentFuel = 1000;
+    static double fuelBurned = 10;
+    static double speed = 100;
+    static double altitude = 0;
+    static double currentSpeed = speed;
+    static int spacewalkTime = 30; // Spacewalk duration
+    static boolean inSpacewalk = false;
+    
+    public static void Launch() {
+        tenSecondCountdown();
+        
+        try {
+            Thread.sleep(11000); // Wait for countdown to finish before launching
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-    public static void main(String[] args) {
-    // Countdown from 10 to launch off
-    // m/s = fuelBurned x 30
-    // altitude = 0 meters, to altitude = 70,000 meters
-    // once 70,000 meters is reached, 30 second timer starts for spacewalk
-    // When altitude reaches 0 meters, display that the ship has landed
-    tenSecondCountdown();
-    simulateFlight();
-    }
+        simulateFlight();
     }
 
     public static void tenSecondCountdown() {
-    Timer timer = new Timer();
+        Timer timer = new Timer();
 
-    timer.scheduleAtFixedRate(new TimerTask() {
-    int time = 10;
-    int countDown = time;
+        timer.scheduleAtFixedRate(new TimerTask() {
+            int countDown = 10;
 
-    public void run() {
-    System.out.println(countDown);
-
-    if (countDown <= 0) {
-    System.out.println("LAUNCHED");
-    timer.cancel();
-    }
-    countDown--;
-    }
-    }, 0, 1000);
-    
+            public void run() {
+                if (countDown > 0) {
+                    System.out.println(countDown);
+                } else {
+                    System.out.println("LAUNCHED");
+                    timer.cancel();
+                }
+                countDown--;
+            }
+        }, 0, 1000);
     }
 
     public static void simulateFlight() {
-        //Simulation of rocket flight mechanics after countdown
         Timer flightTimer = new Timer();
 
-        // Start flight simulation
         flightTimer.scheduleAtFixedRate(new TimerTask() {
-        public void run() {
+            public void run() {
+                if (currentFuel > 0) {
+                    // Burn fuel and increase speed
+                    currentFuel -= fuelBurned;
+                    currentSpeed += fuelBurned * 100;
+                } else {
+                    System.out.println("Out of fuel! Coasting...");
+                }
 
-        double currentFuel = 100;
-        double fuelBurned = 10;
-        double speed = 100;
-        double altitude = 0;
-        double currentSpeed = speed;
-        int spacewalkTime = 30; // Spacewalk time
+                // Update altitude
+                altitude += currentSpeed;
 
-        // Decrease fuel
-        currentFuel -= fuelBurned;
-        // Increase speed based on fuel burn
-        currentSpeed += fuelBurned * 30;
+                System.out.printf("Altitude: %.2f meters, Speed: %.2f m/s, Remaining fuel: %.2f pounds\n", altitude, currentSpeed, currentFuel);
 
-        // Update altitude (simple model: altitude increases with speed)
-        altitude += currentSpeed;
+                // Check for spacewalk
+                if (altitude >= 70000 && !inSpacewalk) {
+                    System.out.println("Altitude reached 70,000 meters. Spacewalk starts!");
+                    inSpacewalk = true;
+                }
 
-        System.out.printf("Altitude: %.2f meters, Speed: %.2f m/s, Remaining fuel: %.2f pounds\n", altitude, currentSpeed, currentFuel);
+                if (inSpacewalk) {
+                    if (spacewalkTime > 0) {
+                        System.out.println("Spacewalk remaining time: " + spacewalkTime + " seconds.");
+                        spacewalkTime--;
+                    } else {
+                        System.out.println("Spacewalk completed. Preparing for descent.");
+                        inSpacewalk = false;
+                    }
+                }
 
-        // Check for spacewalk if altitude reaches 70,000 meters
-        if (altitude >= 70000 && spacewalkTime > 0) {
-        System.out.println("Altitude reached 70,000 meters. Spacewalk starts!");
-        System.out.println("Spacewalk remaining time: " + spacewalkTime + " seconds.");
-        spacewalkTime--;
-        }
+                // Simulate descent after spacewalk
+                if (!inSpacewalk && altitude > 0) {
+                    currentSpeed -= 9.81; // Gravity slows ascent and speeds up descent
+                    altitude -= currentSpeed; // Reduce altitude
 
-        // Spacewalk completed after 30 seconds
-        if (spacewalkTime <= 0 && altitude >= 70000) {
-        System.out.println("Spacewalk completed.");
-        //Stop the spacewalk timer after it's done
-        }
-
-        // Check for return to Earth (altitude decreasing with gravity)
-        if (altitude >= 70000) {
-        // Simulate descent (increased speed due to gravity)
-        currentSpeed += 9.81; // gravity increases speed during descent
-        }
-
-        // If altitude reaches 0, simulate landing
-        if (altitude <= 0) {
-        System.out.println("The ship has landed safely. Astronauts may exit.");
-        flightTimer.cancel();
-        }
+                    if (altitude <= 0) {
+                        altitude = 0;
+                        System.out.println("The ship has landed safely. Astronauts may exit.");
+                        flightTimer.cancel();
+                    }
+                }
+            }
+        }, 0, 1000); // Update every second
     }
-}, 0, 1000); 
-// Simulate flight every second   
 }

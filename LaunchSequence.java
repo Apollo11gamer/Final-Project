@@ -1,5 +1,3 @@
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.Scanner;
 
 public class LaunchSequence {

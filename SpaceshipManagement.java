@@ -1,4 +1,4 @@
-package SubManagements;
+
 import java.util.Scanner;
 
 public class SpaceshipManagement{

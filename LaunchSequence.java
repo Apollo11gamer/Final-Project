@@ -1,92 +1,36 @@
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Scanner;
 
 public class LaunchSequence {
+
+// Constants
+    // This is the gravity effect for increasing and decreasing speed by 9.81 m/s^2 each second.
+    private static final double GRAVITY_EFFECT = 9.81;
+    // This is the altitude where reaching over or to 70000 meters allows for a successful launch to spacewalk.
+    private static final int SUCCESSFUL_LAUNCH_ALTITUDE = 70000;
+    // This is the maximum speed for returning to Earth, which is 3000 m/s.
+    private static final int RETURN_MAXIMUM_SPEED = 3000;
+    // This is the altitude where reaching below 10000 meters allows for the parachute to deploy.
+    private static final int PARACHUTE_ALTITUDE = 10000;
+    // This is the maximum speed reduction during parachute deployment.
+    private static final int PARACHUTE_SPEED = 7;
+
+// Variables
+    // This is the altitude variable (measures in meters).
+    private double altitude = 0;
+    // This is the speed variable (measures in meters per second).
+    private double speed = 0;
+    // This is the fuel variable of the spacecraft being launched (in pounds).
+    private double fuel = 1000;
+    // This is the boolean variable to activate the spacewalk when turned true.
+    private boolean spacewalkStarted = false;
+
+    public static void main(String[] args) {
     
-    static double currentFuel = 1000;
-    static double fuelBurned = 10;
-    static double speed = 100;
-    static double altitude = 0;
-    static double currentSpeed = speed;
-    static int spacewalkTime = 30; // Spacewalk duration
-    static boolean inSpacewalk = false;
-    
-    public static void Launch() {
-        tenSecondCountdown();
-        
-        try {
-            Thread.sleep(11000); // Wait for countdown to finish before launching
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        simulateFlight();
+
     }
 
-    public static void tenSecondCountdown() {
-        Timer timer = new Timer();
-
-        timer.scheduleAtFixedRate(new TimerTask() {
-            int countDown = 10;
-
-            public void run() {
-                if (countDown > 0) {
-                    System.out.println(countDown);
-                } else {
-                    System.out.println("LAUNCHED");
-                    timer.cancel();
-                }
-                countDown--;
-            }
-        }, 0, 1000);
-    }
-
-    public static void simulateFlight() {
-        Timer flightTimer = new Timer();
-
-        flightTimer.scheduleAtFixedRate(new TimerTask() {
-            public void run() {
-                if (currentFuel > 0) {
-                    // Burn fuel and increase speed
-                    currentFuel -= fuelBurned;
-                    currentSpeed += fuelBurned * 100;
-                } else {
-                    System.out.println("Out of fuel! Coasting...");
-                }
-
-                // Update altitude
-                altitude += currentSpeed;
-
-                System.out.printf("Altitude: %.2f meters, Speed: %.2f m/s, Remaining fuel: %.2f pounds\n", altitude, currentSpeed, currentFuel);
-
-                // Check for spacewalk
-                if (altitude >= 70000 && !inSpacewalk) {
-                    System.out.println("Altitude reached 70,000 meters. Spacewalk starts!");
-                    inSpacewalk = true;
-                }
-
-                if (inSpacewalk) {
-                    if (spacewalkTime > 0) {
-                        System.out.println("Spacewalk remaining time: " + spacewalkTime + " seconds.");
-                        spacewalkTime--;
-                    } else {
-                        System.out.println("Spacewalk completed. Preparing for descent.");
-                        inSpacewalk = false;
-                    }
-                }
-
-                // Simulate descent after spacewalk
-                if (!inSpacewalk && altitude > 0) {
-                    currentSpeed -= 9.81; // Gravity slows ascent and speeds up descent
-                    altitude -= currentSpeed; // Reduce altitude
-
-                    if (altitude <= 0) {
-                        altitude = 0;
-                        System.out.println("The ship has landed safely. Astronauts may exit.");
-                        flightTimer.cancel();
-                    }
-                }
-            }
-        }, 0, 1000); // Update every second
-    }
 }
+

@@ -1,4 +1,5 @@
 package SubManagements;
+
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,12 +22,23 @@ public class EmailVerifier {
             Matcher matcher = pattern.matcher(email);
             if (matcher.matches()) {
                 System.out.println("Valid email address: " + email);
-                break;
+                proceedToNextFile();  // Call method AFTER printing valid email
+                break;  // Exit loop after processing the valid email
             } else {
                 System.out.println("Invalid email address. Please try again.");
-
             }
         }
 
+        kbd.close(); // Close scanner after input processing
+    }
+
+    private static void proceedToNextFile() {
+        try {
+            // Assuming AstronautManagement class is in the same package and has a static method named Space()
+            System.out.println("Proceeding to Date of birth verifier...");
+            DOBDetector.DOB();
+        } catch (Exception e) {
+            System.out.println("Error proceeding to the next file: " + e.getMessage());
+        }
     }
 }

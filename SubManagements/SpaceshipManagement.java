@@ -3,7 +3,7 @@ package SubManagements;
 import java.util.Scanner;
 
 public class SpaceshipManagement{
-    
+
 public static void Space() {
 
 String shuttleName;
@@ -30,6 +30,7 @@ System.out.println("What is the maximum amount of astronauts that can be a part 
     }
     else {
         System.out.println(shuttleName + " requires more fuel to leave the planet, please try again.");
+    System.out.close();
     }
 
 }

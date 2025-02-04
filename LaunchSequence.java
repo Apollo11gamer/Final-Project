@@ -18,11 +18,11 @@ public class LaunchSequence {
 
 // Variables
     // This is the altitude variable (measures in meters).
-    private double altitude = 0;
+    double altitude = 0;
     // This is the speed variable (measures in meters per second).
-    private double speed = 0;
+    double speed = 0;
     // This is the fuel variable of the spacecraft being launched (in pounds).
-    private double fuel = 1000;
+    double fuel = 1000;
     // This is the boolean variable to activate the spacewalk when turned true.
     private boolean spacewalkStarted = false;
 

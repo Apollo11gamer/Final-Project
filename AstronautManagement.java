@@ -1,5 +1,4 @@
 import java.util.Scanner;
-
 import SubManagements.EmailVerifier;
 import SubManagements.SpaceshipManagement;
 import password.Password;

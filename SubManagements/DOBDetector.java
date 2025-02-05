@@ -13,7 +13,7 @@ public class DOBDetector {
 
     public static void DOB() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter your Date of Birth (DD/MM/YYYY or MM/DD/YYYY): ");
+        System.out.print("Enter your Date of Birth (DD/MM/YYYY): ");
         String inputDOB = scanner.nextLine();
 
         if (isValidDOB(inputDOB)) {
@@ -43,10 +43,11 @@ public class DOBDetector {
         try {
             LocalDate birthDate = LocalDate.of(year, month, day);
             LocalDate today = LocalDate.now();
+            LocalDate minValidDate = today.minusYears(150); // Earliest valid date is 150 years ago
 
-            // Ensure the date is not in the future and the person is under 150 years old
-            return !(birthDate.isAfter(today) || year < 1875);
-            
+            // Ensure the date is between minValidDate and today
+            return !(birthDate.isBefore(minValidDate) || birthDate.isAfter(today));
+
         } catch (DateTimeParseException e) {
             return false; // Invalid date (e.g., February 30)
         }

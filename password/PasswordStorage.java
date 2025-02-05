@@ -55,7 +55,7 @@ public class PasswordStorage {
     public static String getPassword(String username) {
         try {
             String encryptedPassword = passwordMap.get(username);
-            return encryptedPassword != null ? EncryptionUtil.decrypt(encryptedPassword) : "No password found!";
+            return encryptedPassword != null ? EncryptionUtil.decrypt(encryptedPassword) : null;
         } catch (Exception e) {
             System.out.println("Error retrieving password: " + e.getMessage());
             e.printStackTrace();
@@ -89,5 +89,9 @@ private static void saveAllPasswords() {
 public static String[] getAllUsers() {
     return passwordMap.keySet().toArray(new String[0]);
 }
+public static boolean userExists(String username) {
+    return getPassword(username) != null;  // Returns true if the user exists
+}
+
 
 }

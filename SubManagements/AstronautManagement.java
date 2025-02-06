@@ -3,32 +3,31 @@ import java.util.Scanner;
 
 public class AstronautManagement {
     public static void Space() {
+        String name;
+        double weight;
+        Scanner kbd = new Scanner(System.in);
 
-String Name;
-String DOB;
-String Address;
-String Email;
-double Pay_Rate;
-double Weight;
-String Status;
-String Kin;
-String Reset = "\u001B[0m";
-String Red = "\u001B[31m"; 
-Scanner kbd = new Scanner(System.in);
+        System.out.println("What is the name of the astronaut?");
+        name = kbd.nextLine();
 
+        System.out.println("What is the weight (in lbs) of the astronaut?");
+        while (!kbd.hasNextDouble()) {
+            System.out.println("Invalid input! Please enter a valid weight:");
+            kbd.next(); // Consume invalid input
+        }
+        weight = kbd.nextDouble();
+        kbd.nextLine(); // Consume the newline character
 
-System.out.println("What is the name of the astronaut?");
-    Name = kbd.nextLine();
+        System.out.println("Astronaut Details:");
+        System.out.println("Name: " + name);
+        System.out.println("Weight: " + weight + " lbs");
 
-System.out.println("What is the weight (in lbs) of the astronaut?");
-    Weight = kbd.nextDouble();
+        kbd.close(); // Close scanner to prevent resource leaks
         proceedToNextFile();
     }
 
-
     private static void proceedToNextFile() {
         try {
-            // Assuming AstronautManagement class is in the same package and has a static method named Space()
             System.out.println("Proceeding to Space ship management...");
             SpaceshipManagement.Space();
         } catch (Exception e) {

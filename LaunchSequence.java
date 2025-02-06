@@ -25,7 +25,7 @@ public class LaunchSequence {
 
 
 // This is the main method that goes through the launching sequence;
-    public static void main(String[] args) throws InterruptedException {
+    public static void launch() throws InterruptedException {
 
     // This LaunchSequence object is created: launchingSequence.
     LaunchSequence launchingSequence = new LaunchSequence();

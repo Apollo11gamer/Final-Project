@@ -26,11 +26,12 @@ System.out.println("What is the maximum amount of astronauts that can be a part 
     kbd.close();
 
     if (fuelCapacity > 10000) {
-        System.out.println("The ship, " + shuttleName + ", will be attempting to launch to the moon. There are " + astronautCapacity + " member(s) with " + fuelCapacity + " pounds of fuel to work with." );
+        System.out.println("The ship, " + "'" + shuttleName + "'" + ", will be attempting to launch to the moon. There are " + astronautCapacity + " member(s) with " + fuelCapacity + " pounds of fuel to work with." );
+        System.exit(0);
     }
     else {
         System.out.println(shuttleName + " requires more fuel to leave the planet, please try again.");
-    System.out.close();
+    System.exit(0);
     }
 
 }

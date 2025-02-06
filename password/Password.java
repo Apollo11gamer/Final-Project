@@ -27,7 +27,7 @@ public class Password {
             System.out.println("\nPassword Manager");
 
             if (isFirstTime) {
-                System.out.println("1. Create login info");
+                System.out.println("1. Create new User");
             }
 
             System.out.println("2. Login");

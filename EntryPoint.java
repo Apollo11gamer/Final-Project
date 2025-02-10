@@ -4,11 +4,13 @@ import SubManagements.EmailVerifier;
 import SubManagements.SpaceshipManagement;
 import password.Password;
 
+
 public class EntryPoint{
 
 
 public static void main(String[] args) {
 
+    Launch.initiateLaunch();
     Password.pass();
     EmailVerifier.Email();
     DOBDetector.DOB();

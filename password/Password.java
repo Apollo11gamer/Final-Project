@@ -6,8 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Scanner;
 import SubManagements.EmailVerifier;
+import password.PasswordStorage.User;
 
 public class Password {
     private static boolean isFirstTime = true; // Tracks if user is registering for the first time
@@ -19,7 +22,7 @@ public class Password {
         // Ensure PasswordStorage class has a static method
         PasswordStorage.loadPasswords();
 
-        if (PasswordStorage.hasUsers()) { // Check if users exist
+        if (!PasswordStorage.getAllUsers().isEmpty()) { // Check if users exist
             isFirstTime = false;
         }
 
@@ -75,9 +78,10 @@ public class Password {
         String username = scanner.nextLine();
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
+        String serialNumber = generateSerialNumber();
 
         try {
-            PasswordStorage.savePassword(username, password);
+            PasswordStorage.savePassword(username, password, serialNumber);
             System.out.println("Registration successful! You can now log in.");
         } catch (Exception e) {
             System.out.println("Error saving password: " + e.getMessage());
@@ -126,7 +130,7 @@ public class Password {
                         passwordAttempts--;
                         System.out.println("Invalid Username or password. You have " + passwordAttempts + " attempt(s) left.");
                         if (passwordAttempts == 0) {
-                            System.out.println("Too many failed attempts. GOODBYE!:)");
+                            System.out.println("Too many failed attempts. GOODBYE! :)");
                             logFailedAttempt("Password " + "'" + password + "'"); // Log failed attempt for password
                             return false;  // Lockout after too many failed password attempts
                         }
@@ -165,8 +169,6 @@ public class Password {
         }
     }
 
-    
-
     private static void adminAccess(Scanner scanner) {
         System.out.print("Enter Username: ");
         String username = scanner.nextLine();
@@ -195,23 +197,25 @@ public class Password {
             System.out.println("1. Add User");
             System.out.println("2. Remove User");
             System.out.println("3. View Users");
-            System.out.println("4. Exit Admin Mode");
+            System.out.println("4. Edit User");
+            System.out.println("5. Exit Admin Mode");
             System.out.print("Enter choice: ");
-
+    
             if (!scanner.hasNextInt()) {
-                System.out.println("Invalid input! Please enter a number between 1-4.");
+                System.out.println("Invalid input! Please enter a number between 1-5.");
                 scanner.nextLine(); // Consume invalid input
                 continue;
             }
-
+    
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
-
+    
             switch (choice) {
                 case 1 -> addUser(scanner);
                 case 2 -> removeUser(scanner);
                 case 3 -> viewUsers();
-                case 4 -> {
+                case 4 -> EditAstronaut.editUserInfo(scanner); // Call to edit user info
+                case 5 -> {
                     System.out.println("Exiting Admin Mode...");
                     return;
                 }
@@ -219,6 +223,7 @@ public class Password {
             }
         }
     }
+    
 
     // Add a new user
     private static void addUser(Scanner scanner) {
@@ -226,26 +231,31 @@ public class Password {
         String newUsername = scanner.nextLine();
         System.out.print("Enter password: ");
         String newPassword = scanner.nextLine();
+        String serialNumber = generateSerialNumber();
 
         try {
-            PasswordStorage.savePassword(newUsername, newPassword);
+            PasswordStorage.savePassword(newUsername, newPassword, serialNumber);
             System.out.println("User added successfully!");
         } catch (Exception e) {
             System.out.println("Error adding user: " + e.getMessage());
         }
     }
-    
 
-
-    // Remove a user
+    // Remove a user (requires typing DELETE for confirmation)
     private static void removeUser(Scanner scanner) {
         System.out.print("Enter username to remove: ");
         String usernameToRemove = scanner.nextLine();
 
+        System.out.print("Type 'DELETE' to confirm user removal: ");
+        String confirmation = scanner.nextLine();
+
+        if (!confirmation.equalsIgnoreCase("DELETE")) {
+            System.out.println("User removal canceled.");
+            return;
+        }
+
         if (PasswordStorage.removePassword(usernameToRemove)) {
             System.out.println("User removed successfully!");
-            System.out.println("Restarting the program...");
-            
         } else {
             System.out.println("User not found.");
         }
@@ -254,8 +264,14 @@ public class Password {
     // View all stored users
     private static void viewUsers() {
         System.out.println("Registered Users:");
-        for (String user : PasswordStorage.getAllUsers()) {
-            System.out.println("- " + user);
+        // Iterating through all the users
+        for (Entry<String, User> entry : PasswordStorage.getAllUsers().entrySet()) {
+            String username = entry.getKey();
+            User user = entry.getValue();
+            System.out.println("- Username: " + username);
+            
+            System.out.println("  Serial Number: " + user.serialNumber);
+            System.out.println();
         }
     }
 
@@ -267,4 +283,15 @@ public class Password {
             System.out.println("Error starting EmailVerifier: " + e.getMessage());
         }
     }
+
+    // Method to generate a unique serial number
+    private static String generateSerialNumber() {
+        long timestamp = System.currentTimeMillis();  // Get the current time in milliseconds
+        Random random = new Random();
+        int randomNumber = random.nextInt(10000);  // Random number between 0 and 9999
+        String serialNumber = timestamp + "-" + randomNumber;  // Return a unique serial number
+        System.out.println("Generated Serial Number: " + serialNumber);  // Debugging print statement
+        return serialNumber;
+    }
+    
 }

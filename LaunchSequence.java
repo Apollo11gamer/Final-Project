@@ -72,7 +72,7 @@ public class LaunchSequence {
 // This processFlight method
     public void processFlight() throws InterruptedException {
 
-    double fuelBurned = 3; // Assume burning 3 pounds of fuel per second (just as an example)
+    double fuelBurned = 2; 
     double speedIncrease = fuelBurned * 30;
     fuel -= fuelBurned;
     // Update speed and altitude based on the fuel burned
@@ -84,7 +84,7 @@ public class LaunchSequence {
     spacewalkStarted = true;
     }
     // Simulate a brief delay by waiting 1 second per iteration to simulate time passing.
-    Thread.sleep(1000);
+    Thread.sleep(500);
 
     }
 
@@ -114,11 +114,11 @@ public class LaunchSequence {
     descendingGravityEffect();
     // If speed exceeds 3000 m/s below 70,000 meters, the ship burns up
     if (altitude < SUCCESSFUL_LAUNCH_ALTITUDE && speed > RETURN_MAXIMUM_SPEED) {
-    System.out.println("The ship has burned up due to high speed during re-entry!");
+    System.out.println("(!) The ship has burned up due to high speed during re-entry! (!)");
     return;
     }
     // Deploy parachutes below 10,000 meters
-    if (altitude <= PARACHUTE_ALTITUDE && speed > 7) {
+    if (altitude <= PARACHUTE_ALTITUDE && speed >= PARACHUTE_SPEED) {
     parachuteDeployment();
     }
     }
@@ -137,7 +137,7 @@ public class LaunchSequence {
     altitude -= speed;
     System.out.println("Ascending - - > Altitude: " + altitude + " meters, Speed: " + speed + " m/s");
     // Simulate time passing in seconds.
-    Thread.sleep(1000);  
+    Thread.sleep(500);  
     
     }
 
@@ -149,7 +149,7 @@ public class LaunchSequence {
     altitude -= speed;
     System.out.println("Descending - - > Altitude: " + altitude + " meters, Speed: " + speed + " m/s");
     // Simulate time passing in seconds
-    Thread.sleep(1000);  
+    Thread.sleep(500);  
 
     }
 
@@ -157,11 +157,9 @@ public class LaunchSequence {
 // This parachuteDeployment() method
     public void parachuteDeployment() {
 
-    if (speed > PARACHUTE_SPEED) {
     // Reduce speed to no more than 7 m/s
-    speed = PARACHUTE_SPEED;  
-    }
-    System.out.println("Parachutes deployed! Speed reduced to " + speed + " meters per second.");
+    speed = PARACHUTE_SPEED;
+    System.out.println("Parachutes deployed! Speed reduced to " + speed + " meters per second.");  
 
     }
 

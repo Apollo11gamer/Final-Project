@@ -1,6 +1,7 @@
 import SubManagements.AstronautManagement;
 import SubManagements.DOBDetector;
 import SubManagements.EmailVerifier;
+import SubManagements.Launch;
 import SubManagements.SpaceshipManagement;
 import password.Password;
 
@@ -19,6 +20,7 @@ public static void main(String[] args) {
     DOBDetector.DOB();
     AstronautManagement.Space();
     SpaceshipManagement.Ship();
+    Launch.launch();
 
 
 

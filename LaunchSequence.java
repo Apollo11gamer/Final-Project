@@ -25,7 +25,7 @@ public class LaunchSequence {
 
 
 // This is the main method that goes through the launching sequence;
-    public static void Landing() throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
 
     // This LaunchSequence object is created: launchingSequence.
     LaunchSequence launchingSequence = new LaunchSequence();
@@ -79,7 +79,7 @@ public class LaunchSequence {
     speed += speedIncrease;
     // 1 second interval
     altitude += speed * 1;  
-    System.out.println("Altitude: " + altitude + " meters, Speed: " + speed + " m/s, Fuel: " + fuel + " lbs");
+    System.out.println("Altitude: " + altitude + " meters | Speed: " + speed + " m/s | Fuel: " + fuel + " lbs");
     if (altitude >= SUCCESSFUL_LAUNCH_ALTITUDE && !spacewalkStarted) {
     spacewalkStarted = true;
     }
@@ -119,7 +119,10 @@ public class LaunchSequence {
     }
     // Deploy parachutes below 10,000 meters
     if (altitude <= PARACHUTE_ALTITUDE && speed >= PARACHUTE_SPEED) {
+    for (int count = 0; count == 0; count++) {
     parachuteDeployment();
+    }
+    
     }
     }
     // Landing
@@ -135,7 +138,7 @@ public class LaunchSequence {
     // Prevent negative speed
     if (speed < 0) speed = 0;  
     altitude -= speed;
-    System.out.println("Ascending - - > Altitude: " + altitude + " meters, Speed: " + speed + " m/s");
+    System.out.println("Ascending - - > Altitude: " + altitude + " meters | Speed: " + speed + " m/s");
     // Simulate time passing in seconds.
     Thread.sleep(500);  
     
@@ -159,7 +162,7 @@ public class LaunchSequence {
 
     // Reduce speed to no more than 7 m/s
     speed = PARACHUTE_SPEED;
-    System.out.println("Parachutes deployed! Speed reduced to " + speed + " meters per second.");  
+    System.out.println("Parachutes deployed! Speed reduced to " + speed + " meters per second.");
 
     }
 

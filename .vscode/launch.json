@@ -9,6 +9,20 @@
             "name": "LaunchSequence",
             "request": "launch",
             "mainClass": "LaunchSequence",
+            "projectName": "Final-Project_c0f7f328"
+        },
+        {
+            "type": "java",
+            "name": "Launch",
+            "request": "launch",
+            "mainClass": "Launch",
+            "projectName": "Final-Project_c0f7f328"
+        },
+        {
+            "type": "java",
+            "name": "LaunchSequence",
+            "request": "launch",
+            "mainClass": "LaunchSequence",
             "projectName": "Final-Project_d16c68b9"
         },
         {

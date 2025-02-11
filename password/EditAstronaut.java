@@ -1,6 +1,5 @@
 package password;
 import java.util.Scanner;
-import password.PasswordStorage;
 
 public class EditAstronaut {
 

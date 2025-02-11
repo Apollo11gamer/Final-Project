@@ -2,7 +2,7 @@ public class LaunchSequence {
 
 // Constants
     // This is the gravity effect for increasing and decreasing speed by 9.81 m/s^2 each second.
-    private static final double GRAVITY_EFFECT = 9.81;
+    private static final double GRAVITY_EFFECT = Math.pow(9.81, 2);
     // This is the altitude where reaching over or to 70000 meters allows for a successful launch to spacewalk.
     private static final int SUCCESSFUL_LAUNCH_ALTITUDE = 70000;
     // This is the maximum speed for returning to Earth, which is 3000 m/s.
@@ -22,6 +22,7 @@ public class LaunchSequence {
     double fuel = 1000;
     // This is the boolean variable to activate the spacewalk when turned true.
     private boolean spacewalkStarted = false;
+    boolean parachuteIsDeployed = false;
 
 
 // This is the main method that goes through the launching sequence;
@@ -72,14 +73,14 @@ public class LaunchSequence {
 // This processFlight method
     public void processFlight() throws InterruptedException {
 
-    double fuelBurned = 2; 
+    double fuelBurned = 3; 
     double speedIncrease = fuelBurned * 30;
     fuel -= fuelBurned;
     // Update speed and altitude based on the fuel burned
     speed += speedIncrease;
     // 1 second interval
     altitude += speed * 1;  
-    System.out.println("Altitude: " + altitude + " meters | Speed: " + speed + " m/s | Fuel: " + fuel + " lbs");
+    System.out.printf("Altitude: %.2f meters | Speed: %.2f m/s | Fuel: %.2f lbs %n", altitude, speed, fuel);
     if (altitude >= SUCCESSFUL_LAUNCH_ALTITUDE && !spacewalkStarted) {
     spacewalkStarted = true;
     }
@@ -110,20 +111,21 @@ public class LaunchSequence {
     ascendingGravityEffect();
     }
     // Descending phase - gravity accelerates the rocket
-    while (altitude > 0) {
-    descendingGravityEffect();
+    while (altitude > 0 && altitude < 10000) {
+    // Deploy parachutes below 10,000 meters
+    if (altitude <= PARACHUTE_ALTITUDE && parachuteIsDeployed == false) {
+    parachuteIsDeployed = true;
+    parachuteDeployment();
+    }    
     // If speed exceeds 3000 m/s below 70,000 meters, the ship burns up
     if (altitude < SUCCESSFUL_LAUNCH_ALTITUDE && speed > RETURN_MAXIMUM_SPEED) {
     System.out.println("(!) The ship has burned up due to high speed during re-entry! (!)");
     return;
     }
-    // Deploy parachutes below 10,000 meters
-    if (altitude <= PARACHUTE_ALTITUDE && speed >= PARACHUTE_SPEED) {
-    for (int count = 0; count == 0; count++) {
-    parachuteDeployment();
+    else if (altitude < SUCCESSFUL_LAUNCH_ALTITUDE && speed < RETURN_MAXIMUM_SPEED) {
+    descendingGravityEffect();    
     }
     
-    }
     }
     // Landing
     System.out.println("The ship has landed safely. Astronauts may exit.");
@@ -138,19 +140,25 @@ public class LaunchSequence {
     // Prevent negative speed
     if (speed < 0) speed = 0;  
     altitude -= speed;
-    System.out.println("Ascending - - > Altitude: " + altitude + " meters | Speed: " + speed + " m/s");
+    System.out.printf("Ascending - - > Altitude: %.2f meters %n", altitude);
     // Simulate time passing in seconds.
     Thread.sleep(500);  
     
     }
 
-
 // This descendingGravityEffect() method
     public void descendingGravityEffect() throws InterruptedException {
 
+    // Before parachute is deployed
+    if (parachuteIsDeployed == false) {
     speed += GRAVITY_EFFECT;
+    }
+    // Reduce speed to no more than 7 m/s
+    if (parachuteIsDeployed == true && speed > PARACHUTE_SPEED) {
+    speed = PARACHUTE_SPEED;
+    }
     altitude -= speed;
-    System.out.println("Descending - - > Altitude: " + altitude + " meters, Speed: " + speed + " m/s");
+    System.out.printf("Descending - - > Altitude: %.2f meters %n", altitude);
     // Simulate time passing in seconds
     Thread.sleep(500);  
 
@@ -159,10 +167,8 @@ public class LaunchSequence {
 
 // This parachuteDeployment() method
     public void parachuteDeployment() {
-
-    // Reduce speed to no more than 7 m/s
-    speed = PARACHUTE_SPEED;
-    System.out.println("Parachutes deployed! Speed reduced to " + speed + " meters per second.");
+        
+    System.out.println("Parachutes are deployed! Speed reduced to " + speed + " meters per second.");
 
     }
 

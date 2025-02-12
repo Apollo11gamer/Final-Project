@@ -33,7 +33,7 @@ public class SpaceshipManagement {
     private static void proceedToNextFile() {
         try {
             System.out.println("Proceeding to Launch sequence...");
-            Launch.launch();  // Make sure EmailVerifier.Email() exists
+            Launch.launch();
         } catch (Exception e) {
             System.out.println("Error starting Lauch sequence: " + e.getMessage());
         }

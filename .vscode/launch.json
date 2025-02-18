@@ -9,15 +9,7 @@
             "name": "Launch",
             "request": "launch",
             "mainClass": "SubManagements.Launch",
-            "projectName": "Final-Project_c0f7f328"
-        },
-        {
-            "type": "java",
-            "name": "EntryPoint",
-            "request": "launch",
-            "mainClass": "EntryPoint",
-            "projectName": "Final-Project_c0f7f328"
-        },
+            "projectName": "Final-Project_c0f7f328"        },
         {
             "type": "java",
             "name": "App",

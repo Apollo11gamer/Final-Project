@@ -11,9 +11,9 @@ public class EntryPoint{
 
 public static void main(String[] args) {
 
-    System.out.println("=========================================");
+    System.out.println("===============================================");
     System.out.println("|  🚀 Welcome to BAISD Astronaut Control Panel |");
-    System.out.println("=========================================");
+    System.out.println("===============================================");
 
     Password.pass();
     EmailVerifier.Email();

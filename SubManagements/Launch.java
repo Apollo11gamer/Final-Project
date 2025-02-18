@@ -38,7 +38,7 @@ public class Launch {
             currentAltitude += currentSpeed;
             currentFuel -= FUEL_BURN_RATE;
 
-            System.out.printf("Fuel: %.2f L | Speed: %.2f m/s | Altitude: %.2f \r", currentFuel, currentSpeed, currentAltitude);
+            System.out.printf("Fuel: %.2f Lbs | Speed: %.2f m/s | Altitude: %.2f \r", currentFuel, currentSpeed, currentAltitude);
 
             try {
                 Thread.sleep(1000);

@@ -10,7 +10,7 @@ public class Launch {
     private static final double SPACEWALK_ALTITUDE = 70000.0;
     private static final double PARACHUTE_DEPLOY_ALTITUDE = 10000.0;
 
-    private double currentFuel = INITIAL_FUEL;
+    double currentFuel = INITIAL_FUEL;
     private double currentSpeed = 10.0;
     private double currentAltitude = 0.0;
     private boolean parachuteDeployed = false;
@@ -29,7 +29,6 @@ public class Launch {
 
         System.out.println("Launch!\r");
 
-        boolean spacewalkStarted = false;
         long spacewalkStartTime = 0;
 
         while (currentFuel > 0 && currentAltitude < SPACEWALK_ALTITUDE) {

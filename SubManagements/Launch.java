@@ -118,7 +118,7 @@ public class Launch {
         System.out.printf("Final speed: %.2f m/s | Final altitude: %.2f \r", currentSpeed, currentAltitude);
     }
 
-    public static void main(String[] args) {
+    public static void launch() {
         new Launch().initiateLaunch();
     }
 }

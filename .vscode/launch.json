@@ -1,0 +1,125 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "EntryPoint",
+            "request": "launch",
+            "mainClass": "EntryPoint",
+            "projectName": "Final-Project_c0f7f328"
+        },
+        {
+            "type": "java",
+            "name": "Launch",
+            "request": "launch",
+            "mainClass": "SubManagements.Launch",
+            "projectName": "Final-Project_c0f7f328"
+        },
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "com.example/com.example.App",
+            "projectName": "demo"
+        },
+        {
+            "type": "java",
+            "name": "astro/EntryPoint",
+            "request": "launch",
+            "mainClass": "com.astro/EntryPoint",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
+            "name": "AstronautControlPanel",
+            "request": "launch",
+            "mainClass": "com.astro/com.astro.AstronautControlPanel",
+            "projectName": "demo"
+        },
+        {
+            "type": "java",
+            "name": "AstronautControlPanel",
+            "request": "launch",
+            "mainClass": "AstronautControlPanel",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "com.astro/com.astro.App",
+            "projectName": "demo"
+        },
+        {
+            "type": "java",
+            "name": "LaunchSequence",
+            "request": "launch",
+            "mainClass": "LaunchSequence",
+            "projectName": "Final-Project_c0f7f328"
+        },
+        {
+            "type": "java",
+            "name": "Launch",
+            "request": "launch",
+            "mainClass": "Launch",
+            "projectName": "Final-Project_c0f7f328"
+        },
+        {
+            "type": "java",
+            "name": "LaunchSequence",
+            "request": "launch",
+            "mainClass": "LaunchSequence",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
+            "name": "Launch",
+            "request": "launch",
+            "mainClass": "Launch",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
+            "name": "DOBDetector",
+            "request": "launch",
+            "mainClass": "SubManagements.DOBDetector",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
+            "name": "SpaceshipManagement",
+            "request": "launch",
+            "mainClass": "SubManagements.SpaceshipManagement",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "EntryPoint",
+            "request": "launch",
+            "mainClass": "EntryPoint",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
+            "name": "Password",
+            "request": "launch",
+            "mainClass": "password.Password",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
+            "request": "launch",
+            "name": "Launch JavaFX",
+            "vmArgs": "--module-path C:/Users/000000021.AD.000/Downloads/openjfx-23.0.2_windows-x64_bin-sdk/javafx-sdk-23.0.2/lib --add-modules javafx.controls,javafx.fxml"
+        }
+    ]
+}

@@ -10,7 +10,7 @@ public class Launch {
     private static final double SPACEWALK_ALTITUDE = 70000.0;
     private static final double PARACHUTE_DEPLOY_ALTITUDE = 10000.0;
 
-    double currentFuel = INITIAL_FUEL;
+    private double currentFuel = INITIAL_FUEL;
     private double currentSpeed = 10.0;
     private double currentAltitude = 0.0;
     private boolean parachuteDeployed = false;
@@ -40,7 +40,7 @@ public class Launch {
             System.out.printf("Fuel: %.2f Lbs | Speed: %.2f m/s | Altitude: %.2f \r", currentFuel, currentSpeed, currentAltitude);
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 return;
@@ -61,17 +61,17 @@ public class Launch {
             }
         }
 
-        System.out.println("Spacewalk complete. Beginning descent.\r");
+        System.out.println("Spacewalk complete. Beginning descent.");
         descend();
     }
 
     private void descend() {
-        System.out.println("Rocket starting descent...\r");
+        System.out.println("Rocket starting descent...");
     
         while (currentAltitude > 0) {
             if (!parachuteDeployed && currentAltitude <= PARACHUTE_DEPLOY_ALTITUDE) {
                 parachuteDeployed = true;
-                System.out.println("Parachute deployed! Rapidly slowing descent...\r");
+                System.out.println("\nParachute deployed! Rapidly slowing descent...\r");
             }
     
             if (parachuteDeployed) {
@@ -103,7 +103,7 @@ public class Launch {
             System.out.printf("Descending... Speed: %.2f m/s | Altitude: %.2f \r", currentSpeed, currentAltitude);
     
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 return;
@@ -113,8 +113,8 @@ public class Launch {
         // Ensure perfect landing with zero speed
         currentSpeed = 0;
         currentAltitude = 0;
-        System.out.printf("Rocket has landed safely.\r");
-        System.out.printf("Final speed: %.2f m/s | Final altitude: %.2f \r", currentSpeed, currentAltitude);
+        System.out.printf("Rocket has landed safely. Final speed: %.2f m/s | Final altitude: %.2f", currentSpeed, currentAltitude);
+    
     }
 
     public static void launch() {

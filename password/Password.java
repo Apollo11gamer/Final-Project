@@ -41,7 +41,7 @@ public class Password {
 
             // Validate integer input
             if (!scanner.hasNextInt()) {
-                System.out.println("Invalid input! Please enter a number between 1-4.");
+                System.out.println("\nInvalid input! Please enter a number between 1-4.");
                 scanner.nextLine(); // Consume invalid input
                 continue;
             }
@@ -64,11 +64,11 @@ public class Password {
                             return; // Exit method without closing scanner
                         }
                         case 4 -> adminAccess(scanner);
-                        default -> System.out.println("Invalid choice! Please enter a valid option.");
+                        default -> System.out.println("\nInvalid choice! Please enter a valid option.");
                     }
                 }
             } catch (Exception e) {
-                System.out.println("An unexpected error occurred: " + e.getMessage());
+                System.out.println("\nAn unexpected error occurred: " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -85,7 +85,7 @@ public class Password {
             PasswordStorage.savePassword(username, password, serialNumber);
             System.out.println("Registration successful! You can now log in.");
         } catch (Exception e) {
-            System.out.println("Error saving password: " + e.getMessage());
+            System.out.println("\nError saving password: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -105,9 +105,9 @@ public class Password {
             // Check if the username exists before proceeding
             if (!PasswordStorage.userExists(username)) {
                 usernameAttempts--;
-                System.out.println("Username not found! You have " + usernameAttempts + " attempt(s) left.");
+                System.out.println("\nUsername not found! You have " + usernameAttempts + " attempt(s) left.");
                 if (usernameAttempts <= 0) {
-                    System.out.println("Too many failed attempts. GOODBYE! :)");
+                    System.out.println("\nToo many failed attempts. GOODBYE! :)");
                     logFailedAttempt("Username " + "'" + username + "'"); // Log failed attempt for username
                     System.exit(0);  // Exit after too many failed attempts
                     return false;  // Lockout after too many failed username attempts
@@ -129,15 +129,15 @@ public class Password {
                         return true;  // Login successful
                     } else {
                         passwordAttempts--;
-                        System.out.println("Invalid Username or password. You have " + passwordAttempts + " attempt(s) left.");
+                        System.out.println("\nInvalid Username or password. You have " + passwordAttempts + " attempt(s) left.");
                         if (passwordAttempts == 0) {
-                            System.out.println("Too many failed attempts. GOODBYE! :)");
+                            System.out.println("\nToo many failed attempts. GOODBYE! :)");
                             logFailedAttempt("Password " + "'" + password + "'"); // Log failed attempt for password
                             return false;  // Lockout after too many failed password attempts
                         }
                     }
                 } catch (Exception e) {
-                    System.out.println("An error occurred while retrieving the password: " + e.getMessage());
+                    System.out.println("\nAn error occurred while retrieving the password: " + e.getMessage());
                     e.printStackTrace();
                     return false;  // Login failed due to an error
                 }
@@ -166,7 +166,7 @@ public class Password {
             }
 
         } catch (IOException e) {
-            System.out.println("Error writing to log file: " + e.getMessage());
+            System.out.println("\nError writing to log file: " + e.getMessage());
         }
     }
 
@@ -176,7 +176,7 @@ public class Password {
 
         // Ensure only the Admin username is allowed
         if (!username.equalsIgnoreCase("Admin")) {
-            System.out.println("Invalid username! Admin access is restricted.");
+            System.out.println("\nInvalid username! Admin access is restricted.");
             return;
         }
 
@@ -187,7 +187,7 @@ public class Password {
             System.out.println("Admin authentication successful!");
             adminMenu(scanner);
         } else {
-            System.out.println("Invalid admin credentials! Access denied.");
+            System.out.println("\nInvalid admin credentials! Access denied.");
         }
     }
 
@@ -203,7 +203,7 @@ public class Password {
             System.out.print("Enter choice: ");
     
             if (!scanner.hasNextInt()) {
-                System.out.println("Invalid input! Please enter a number between 1-5.");
+                System.out.println("\nInvalid input! Please enter a number between 1-5.");
                 scanner.nextLine(); // Consume invalid input
                 continue;
             }
@@ -220,7 +220,7 @@ public class Password {
                     System.out.println("Exiting Admin Mode...");
                     return;
                 }
-                default -> System.out.println("Invalid choice! Please enter a valid option.");
+                default -> System.out.println("\nInvalid choice! Please enter a valid option.");
             }
         }
     }
@@ -238,7 +238,7 @@ public class Password {
             PasswordStorage.savePassword(newUsername, newPassword, serialNumber);
             System.out.println("User added successfully!");
         } catch (Exception e) {
-            System.out.println("Error adding user: " + e.getMessage());
+            System.out.println("\nError adding user: " + e.getMessage());
         }
     }
 
@@ -281,7 +281,7 @@ public class Password {
             System.out.println("Proceeding to Email verification...");
             EmailVerifier.Email();
         } catch (Exception e) {
-            System.out.println("Error starting EmailVerifier: " + e.getMessage());
+            System.out.println("\nError starting EmailVerifier: " + e.getMessage());
         }
     }
 

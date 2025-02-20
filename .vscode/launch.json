@@ -9,6 +9,13 @@
             "name": "EntryPoint",
             "request": "launch",
             "mainClass": "EntryPoint",
+            "projectName": "Final-Project_7226eddc"
+        },
+        {
+            "type": "java",
+            "name": "EntryPoint",
+            "request": "launch",
+            "mainClass": "EntryPoint",
             "projectName": "Final-Project_c0f7f328"
         },
         {

@@ -10,15 +10,9 @@ public class SpaceshipManagement {
         int astronautCapacity;
         Scanner kbd = new Scanner(System.in);
 
-<<<<<<< HEAD
-    String shuttleName;
-    double fuelCapacity;
-    int astronautCapacity;
-    Scanner kbd = new Scanner(System.in);
-=======
-        System.out.println("What is the name of the shuttle?");
-        shuttleName = kbd.nextLine();
->>>>>>> 4f56f32dfcf1924af58674235e645f1f8eef84e4
+
+        System.out.println("What is the shuttle's name?");
+        shuttleName = kbd.next();
 
         System.out.println("What is the maximum amount of fuel(pounds of fuel) for the spaceship?");
         fuelCapacity = kbd.nextDouble();

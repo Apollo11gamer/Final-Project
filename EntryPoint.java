@@ -20,13 +20,9 @@ public static void main(String[] args) {
     EmailVerifier.Email();
     DOBDetector.DOB();
     AstronautManagement.Space();
-<<<<<<< HEAD
-    SpaceshipManagement.Space();
-=======
     SpaceshipManagement.Ship();
     Launch.launch();
 
->>>>>>> 4f56f32dfcf1924af58674235e645f1f8eef84e4
 
 
 

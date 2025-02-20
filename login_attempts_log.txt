@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-Failed Username 'ballz' attempt at 2025-02-07 08:11:55
-Failed Password 'ballz' attempt at 2025-02-07 08:12:33
-=======
 
 Failed Username '' attempt at 2025-02-11 09:49:19
 Failed Username '' attempt at 2025-02-12 08:03:31
->>>>>>> 4f56f32dfcf1924af58674235e645f1f8eef84e4
+Failed Username '1' attempt at 2025-02-19 08:30:56

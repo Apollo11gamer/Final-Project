@@ -30,6 +30,7 @@ public class EmailVerifier {
         }
     }
 
+    // Moved out of Email() method. Continued to DOB() method.
     private static void proceedToNextFile() {
         try {
             // Assuming AstronautManagement class is in the same package and has a static method named Space()

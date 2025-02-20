@@ -6,41 +6,6 @@
     "configurations": [
         {
             "type": "java",
-            "name": "PasswordGUI",
-            "request": "launch",
-            "mainClass": "password.PasswordGUI",
-            "projectName": "Final-Project_7226eddc"
-        },
-        {
-            "type": "java",
-            "name": "AstronautManagementGUI",
-            "request": "launch",
-            "mainClass": "SubManagements.AstronautManagementGUI",
-            "projectName": "Final-Project_7226eddc"
-        },
-        {
-            "type": "java",
-            "name": "EntryPointGUI",
-            "request": "launch",
-            "mainClass": "EntryPointGUI",
-            "projectName": "Final-Project_7226eddc"
-        },
-        {
-            "type": "java",
-            "name": "SimpleGUI",
-            "request": "launch",
-            "mainClass": "SimpleGUI",
-            "projectName": "Final-Project_7226eddc"
-        },
-        {
-            "type": "java",
-            "name": "EntryPoint",
-            "request": "launch",
-            "mainClass": "EntryPoint",
-            "projectName": "Final-Project_7226eddc"
-        },
-        {
-            "type": "java",
             "name": "EntryPoint",
             "request": "launch",
             "mainClass": "EntryPoint",

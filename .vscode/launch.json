@@ -6,6 +6,34 @@
     "configurations": [
         {
             "type": "java",
+            "name": "EmojiUnicode",
+            "request": "launch",
+            "mainClass": "EmojiUnicode",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
+            "name": "EmojiUTF16",
+            "request": "launch",
+            "mainClass": "EmojiUTF16",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
+            "name": "EmojiExample",
+            "request": "launch",
+            "mainClass": "EmojiExample",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
+            "name": "PhoneNumberVerifier",
+            "request": "launch",
+            "mainClass": "PhoneNumberVerifier",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
             "name": "Launch",
             "request": "launch",
             "mainClass": "SubManagements.Launch",

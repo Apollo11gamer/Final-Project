@@ -49,7 +49,7 @@ public class LaunchSequence {
     for (int i = 10; i >= 0; i--) {
     System.out.println(i + "...");
     // This Thread.sleep() method pauses 1 second between countdown steps.
-    Thread.sleep(1000);  
+    Thread.sleep(1000);
     }
     // This prints the string, "LAUNCH - - > ," after the countdown is finished.
     System.out.println("LAUNCH - - > ");

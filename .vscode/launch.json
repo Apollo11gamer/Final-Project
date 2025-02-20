@@ -6,17 +6,10 @@
     "configurations": [
         {
             "type": "java",
-            "name": "SpaceManageGUI",
-            "request": "launch",
-            "mainClass": "SubManagements.SpaceManageGUI",
-            "projectName": "Final-Project_d16c68b9"
-        },
-        {
-            "type": "java",
             "name": "EntryPointGUI",
             "request": "launch",
             "mainClass": "EntryPointGUI",
-            "projectName": "Final-Project_d16c68b9"
+            "projectName": "Final-Project_c0f7f328"
         },
         {
             "type": "java",

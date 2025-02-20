@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "EntryPointGUI",
+            "request": "launch",
+            "mainClass": "EntryPointGUI",
+            "projectName": "Final-Project_c0f7f328"
+        },
+        {
+            "type": "java",
             "name": "EntryPoint",
             "request": "launch",
             "mainClass": "EntryPoint",

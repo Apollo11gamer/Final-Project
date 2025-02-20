@@ -1,17 +1,9 @@
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
-import SubManagements.SpaceshipManagement;
-import SubManagements.AstronautManagement;
 import SubManagements.AstronautManagementGUI;
-import SubManagements.DOBDetector;
 import SubManagements.DOBDetectorGUI;
-import SubManagements.EmailVerifier;
-import SubManagements.Launch;
+import SubManagements.LaunchGUI;
 import SubManagements.SpaceManageGUI;
-import password.Password;
+import java.awt.*;
+import javax.swing.*;
 import password.PasswordGUI;
 
 public class EntryPointGUI {
@@ -23,7 +15,7 @@ public class EntryPointGUI {
 
         // Create a panel to hold the components (buttons)
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(7, 1));
+        panel.setLayout(new GridLayout(6, 1)); // Changed to 6 rows since there's no title inside it
 
         // Add a title label
         JLabel titleLabel = new JLabel("🚀 Welcome to BAISD Astronaut Control Panel", SwingConstants.CENTER);
@@ -46,7 +38,10 @@ public class EntryPointGUI {
         spaceshipButton.addActionListener(e -> SpaceManageGUI.ship());
 
         JButton launchButton = new JButton("Launch Mission");
-        launchButton.addActionListener(e -> Launch.launch());
+        launchButton.addActionListener(e -> LaunchGUI.launch());
+
+        JButton exitButton = new JButton("Exit Program");
+        exitButton.addActionListener(e -> System.exit(0));
 
         // Add buttons to the panel
         panel.add(passwordButton);
@@ -54,6 +49,7 @@ public class EntryPointGUI {
         panel.add(astronautButton);
         panel.add(spaceshipButton);
         panel.add(launchButton);
+        panel.add(exitButton);
 
         // Add panel to the frame
         frame.add(panel, BorderLayout.CENTER);

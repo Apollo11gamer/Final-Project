@@ -1,80 +1,105 @@
 package SubManagements;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
 
 public class SpaceManageGUI {
     private JFrame frame;
     private JTextField shuttleNameField, fuelCapacityField, astronautCapacityField;
-    private JTextArea outputArea;
-
+    private JTextArea astronautNamesArea;
+    private JButton launchButton;
+    
     public SpaceManageGUI() {
         frame = new JFrame("Spaceship Management");
-        frame.setSize(400, 300);
+        frame.setSize(400, 350);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new GridLayout(5, 2));
+        frame.setLayout(new GridLayout(6, 1));
 
-        JLabel nameLabel = new JLabel("Shuttle Name:");
-        shuttleNameField = new JTextField();
+        // Shuttle Name
+        JPanel shuttlePanel = new JPanel();
+        shuttlePanel.add(new JLabel("Shuttle Name:"));
+        shuttleNameField = new JTextField(15);
+        shuttlePanel.add(shuttleNameField);
+        frame.add(shuttlePanel);
 
-        JLabel fuelLabel = new JLabel("Fuel Capacity (lbs):");
-        fuelCapacityField = new JTextField();
+        // Fuel Capacity
+        JPanel fuelPanel = new JPanel();
+        fuelPanel.add(new JLabel("Fuel Capacity (lbs):"));
+        fuelCapacityField = new JTextField(10);
+        fuelPanel.add(fuelCapacityField);
+        frame.add(fuelPanel);
 
-        JLabel astronautLabel = new JLabel("Astronaut Capacity:");
-        astronautCapacityField = new JTextField();
+        // Astronaut Capacity
+        JPanel astronautPanel = new JPanel();
+        astronautPanel.add(new JLabel("Astronaut Capacity:"));
+        astronautCapacityField = new JTextField(5);
+        astronautPanel.add(astronautCapacityField);
+        frame.add(astronautPanel);
 
-        JButton submitButton = new JButton("Launch");
-        outputArea = new JTextArea();
-        outputArea.setEditable(false);
+        // Astronaut Names
+        JPanel namesPanel = new JPanel();
+        namesPanel.setLayout(new BorderLayout());
+        namesPanel.add(new JLabel("Astronaut Names (comma-separated):"), BorderLayout.NORTH);
+        astronautNamesArea = new JTextArea(3, 20);
+        namesPanel.add(new JScrollPane(astronautNamesArea), BorderLayout.CENTER);
+        frame.add(namesPanel);
 
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                launchShip();
-            }
-        });
-
-        frame.add(nameLabel);
-        frame.add(shuttleNameField);
-        frame.add(fuelLabel);
-        frame.add(fuelCapacityField);
-        frame.add(astronautLabel);
-        frame.add(astronautCapacityField);
-        frame.add(submitButton);
-        frame.add(new JScrollPane(outputArea));
+        // Launch Button
+        launchButton = new JButton("Launch Spaceship");
+        launchButton.addActionListener(new LaunchButtonListener());
+        frame.add(launchButton);
 
         frame.setVisible(true);
     }
 
-    private void launchShip() {
-        String shuttleName = shuttleNameField.getText();
-        String fuelText = fuelCapacityField.getText();
-        String astronautText = astronautCapacityField.getText();
+    private class LaunchButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String shuttleName = shuttleNameField.getText();
+            double fuelCapacity;
+            int astronautCapacity;
+            
+            try {
+                fuelCapacity = Double.parseDouble(fuelCapacityField.getText());
+                astronautCapacity = Integer.parseInt(astronautCapacityField.getText());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(frame, "Invalid input. Please enter numerical values for fuel and astronaut capacity.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-        try {
-            double fuelCapacity = Double.parseDouble(fuelText);
-            int astronautCapacity = Integer.parseInt(astronautText);
+            String[] astronautNames = astronautNamesArea.getText().split(",");
+            
+            if (astronautNames.length != astronautCapacity) {
+                JOptionPane.showMessageDialog(frame, "Please enter exactly " + astronautCapacity + " astronaut names.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
             if (fuelCapacity > 10000) {
-                outputArea.setText("The ship, '" + shuttleName + "', will be attempting to launch to the moon.\n"
-                        + "There are " + astronautCapacity + " member(s) with " + fuelCapacity + " pounds of fuel to work with.");
-                proceedToNextFile();
+                StringBuilder message = new StringBuilder();
+                message.append("The ship '").append(shuttleName).append("' is launching to the moon!\n");
+                message.append("Fuel: ").append(fuelCapacity).append(" lbs\n");
+                message.append("Crew Members:\n");
+                for (String name : astronautNames) {
+                    message.append("- ").append(name.trim()).append("\n");
+                }
+
+                JOptionPane.showMessageDialog(frame, message.toString(), "Launch Successful", JOptionPane.INFORMATION_MESSAGE);
+                
+                proceedToLaunch();
             } else {
-                outputArea.setText(shuttleName + " requires more fuel to leave the planet. Please try again.");
+                JOptionPane.showMessageDialog(frame, shuttleName + " requires more fuel to leave the planet.", "Launch Failure", JOptionPane.WARNING_MESSAGE);
             }
-        } catch (NumberFormatException ex) {
-            outputArea.setText("Invalid input. Please enter valid numbers for fuel and astronaut capacity.");
         }
     }
 
-    private void proceedToNextFile() {
+    private void proceedToLaunch() {
         try {
-            outputArea.append("\nProceeding to Launch sequence...");
-            // Launch.launch(); // Uncomment if you have a Launch class
+            JOptionPane.showMessageDialog(frame, "Proceeding to Launch sequence...", "Launch Sequence", JOptionPane.INFORMATION_MESSAGE);
+            LaunchGUI.launch(); // Assuming you have a Launch class
         } catch (Exception e) {
-            outputArea.append("\nError starting Launch sequence: " + e.getMessage());
+            JOptionPane.showMessageDialog(frame, "Error starting Launch sequence: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

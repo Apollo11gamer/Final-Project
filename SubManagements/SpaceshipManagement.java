@@ -5,45 +5,63 @@ import java.util.Scanner;
 public class SpaceshipManagement {
 
     public static void Ship() {
-        String shuttleName; // String for the name of the spaceship.
-        double fuelCapacity; // Double for the pounds of fuel the spaceship can hold.
-        int astronautCapacity; // Integer for the amount of astronauts the spaceship can hold.
+        String shuttleName;
+        double fuelCapacity;
+        int astronautCapacity;
         Scanner kbd = new Scanner(System.in);
 
-        // Prompts for the name of the spaceship, then stores the answer in shuttleName.
         System.out.println("What is the name of the shuttle?");
         shuttleName = kbd.nextLine();
 
-        // Prompts for the maximum amount of fuel the spaceship can hold, then stores the answer in fuelCapacity.
-        System.out.println("What is the maximum amount of fuel(pounds of fuel) for the spaceship?");
+        System.out.println("What is the maximum amount of fuel (pounds of fuel) for the spaceship?");
         fuelCapacity = kbd.nextDouble();
 
-        // Prompts for the maximum amount of astronauts the spaceship can hold, then stores the answer in astronautCapacity.
         System.out.println("What is the maximum amount of astronauts that can be a part of the crew?");
         astronautCapacity = kbd.nextInt();
+        kbd.nextLine(); // Consume newline left-over from nextInt()
 
-        kbd.close();
+        String[] astronautNames = new String[astronautCapacity];
 
-        // If fuelCapacity is greater than 10,000 pounds of fuel, then it can launch. If it is not, a message will tell that you need more fuel.
+        if (astronautCapacity > 1) {
+            System.out.println("Please enter the names of the " + astronautCapacity + " astronauts:");
+            for (int i = 0; i < astronautCapacity; i++) {
+                System.out.print("Astronaut " + (i + 1) + ": ");
+                astronautNames[i] = kbd.nextLine();
+            }
+        } else if (astronautCapacity == 1) {
+            System.out.println("Please enter the name of the astronaut:");
+            System.out.print("Astronaut 1: ");
+            astronautNames[0] = kbd.nextLine();
+        }
+
         if (fuelCapacity > 10000) {
-            System.out.println("The ship, '" + shuttleName + "', will be attempting to launch to the moon. There are " + astronautCapacity + " member(s) with " + fuelCapacity + " pounds of fuel to work with.");
+            System.out.println("\nThe ship, '" + shuttleName + "', will be attempting to launch to the moon.");
+            System.out.println("There are " + astronautCapacity + " member(s) aboard with " + fuelCapacity + " pounds of fuel.");
+
+            if (astronautCapacity > 0) {
+                System.out.println("Crew Members: ");
+                for (String name : astronautNames) {
+                    System.out.println("- " + name);
+                }
+            }
+
             proceedToNextFile();
         } else {
-            System.out.println(shuttleName + " requires more fuel to leave the planet, please try again.");
+            System.out.println(shuttleName + " requires more fuel to leave the planet. Please try again.");
+            System.exit(0);
         }
     }
 
-    // Moved outside of Ship() method. Continuing to launch() method.
     private static void proceedToNextFile() {
         try {
             System.out.println("Proceeding to Launch sequence...");
             Launch.launch();
         } catch (Exception e) {
-            System.out.println("Error starting Lauch sequence: " + e.getMessage());
+            System.out.println("Error starting Launch sequence: " + e.getMessage());
         }
     }
 
     public static void ship() {
-        Ship();  // Calling the Ship method in main.
+        Ship(); // Calling the Ship method
     }
 }

@@ -1,109 +1,106 @@
 package SubManagements;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.*;
+import javax.swing.; import java.awt.; import java.awt.event.ActionEvent; import java.awt.event.ActionListener; import java.util.Random;
 
-public class SpaceManageGUI {
-    private JFrame frame;
-    private JTextField shuttleNameField, fuelCapacityField, astronautCapacityField;
-    private JTextArea astronautNamesArea;
-    private JButton launchButton;
+public class SpaceManageGUI { private JFrame frame; private JTextField astronautCountField; private JButton nextButton;
+
+public SpaceManageGUI() {
+    frame = new JFrame("Astronaut Management");
+    frame.setSize(300, 150);
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setLayout(new GridLayout(3, 1));
     
-    public SpaceManageGUI() {
-        frame = new JFrame("Spaceship Management");
-        frame.setSize(400, 350);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new GridLayout(6, 1));
-
-        // Shuttle Name
-        JPanel shuttlePanel = new JPanel();
-        shuttlePanel.add(new JLabel("Shuttle Name:"));
-        shuttleNameField = new JTextField(15);
-        shuttlePanel.add(shuttleNameField);
-        frame.add(shuttlePanel);
-
-        // Fuel Capacity
-        JPanel fuelPanel = new JPanel();
-        fuelPanel.add(new JLabel("Fuel Capacity (lbs):"));
-        fuelCapacityField = new JTextField(10);
-        fuelPanel.add(fuelCapacityField);
-        frame.add(fuelPanel);
-
-        // Astronaut Capacity
-        JPanel astronautPanel = new JPanel();
-        astronautPanel.add(new JLabel("Astronaut Capacity:"));
-        astronautCapacityField = new JTextField(5);
-        astronautPanel.add(astronautCapacityField);
-        frame.add(astronautPanel);
-
-        // Astronaut Names
-        JPanel namesPanel = new JPanel();
-        namesPanel.setLayout(new BorderLayout());
-        namesPanel.add(new JLabel("Astronaut Names (comma-separated):"), BorderLayout.NORTH);
-        astronautNamesArea = new JTextArea(3, 20);
-        namesPanel.add(new JScrollPane(astronautNamesArea), BorderLayout.CENTER);
-        frame.add(namesPanel);
-
-        // Launch Button
-        launchButton = new JButton("Launch Spaceship");
-        launchButton.addActionListener(new LaunchButtonListener());
-        frame.add(launchButton);
-
-        frame.setVisible(true);
-    }
-
-    private class LaunchButtonListener implements ActionListener {
+    JPanel inputPanel = new JPanel();
+    inputPanel.add(new JLabel("Number of Astronauts:"));
+    astronautCountField = new JTextField(5);
+    inputPanel.add(astronautCountField);
+    frame.add(inputPanel);
+    
+    nextButton = new JButton("Next");
+    nextButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String shuttleName = shuttleNameField.getText();
-            double fuelCapacity;
-            int astronautCapacity;
-            
             try {
-                fuelCapacity = Double.parseDouble(fuelCapacityField.getText());
-                astronautCapacity = Integer.parseInt(astronautCapacityField.getText());
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(frame, "Invalid input. Please enter numerical values for fuel and astronaut capacity.", "Input Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            String[] astronautNames = astronautNamesArea.getText().split(",");
-            
-            if (astronautNames.length != astronautCapacity) {
-                JOptionPane.showMessageDialog(frame, "Please enter exactly " + astronautCapacity + " astronaut names.", "Input Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if (fuelCapacity > 10000) {
-                StringBuilder message = new StringBuilder();
-                message.append("The ship '").append(shuttleName).append("' is launching to the moon!\n");
-                message.append("Fuel: ").append(fuelCapacity).append(" lbs\n");
-                message.append("Crew Members:\n");
-                for (String name : astronautNames) {
-                    message.append("- ").append(name.trim()).append("\n");
+                int count = Integer.parseInt(astronautCountField.getText());
+                if (count > 0) {
+                    new AstronautDetailsGUI(count);
+                    frame.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-
-                JOptionPane.showMessageDialog(frame, message.toString(), "Launch Successful", JOptionPane.INFORMATION_MESSAGE);
-                
-                proceedToLaunch();
-            } else {
-                JOptionPane.showMessageDialog(frame, shuttleName + " requires more fuel to leave the planet.", "Launch Failure", JOptionPane.WARNING_MESSAGE);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(frame, "Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }
-
-    private void proceedToLaunch() {
-        try {
-            JOptionPane.showMessageDialog(frame, "Proceeding to Launch sequence...", "Launch Sequence", JOptionPane.INFORMATION_MESSAGE);
-            LaunchGUI.launch(); // Assuming you have a Launch class
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(frame, "Error starting Launch sequence: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public static void ship() {
-        SwingUtilities.invokeLater(SpaceManageGUI::new);
-    }
+    });
+    frame.add(nextButton);
+    
+    frame.setVisible(true);
 }
+
+public static void ship() {
+    SwingUtilities.invokeLater(SpaceManageGUI::new);
+}
+
+}
+
+class AstronautDetailsGUI { private JFrame frame; private JTextField[] kinFields, weightFields, payRateFields, statusFields; private int[] serialNumbers; private int astronautCount; private Random random;
+
+public AstronautDetailsGUI(int count) {
+    this.astronautCount = count;
+    this.random = new Random();
+    serialNumbers = new int[count];
+    kinFields = new JTextField[count];
+    weightFields = new JTextField[count];
+    payRateFields = new JTextField[count];
+    statusFields = new JTextField[count];
+
+    frame = new JFrame("Astronaut Details");
+    frame.setSize(400, (count * 50) + 100);
+    frame.setLayout(new GridLayout(count + 1, 5));
+
+    frame.add(new JLabel("Serial"));
+    frame.add(new JLabel("Next of Kin"));
+    frame.add(new JLabel("Weight (kg)"));
+    frame.add(new JLabel("Pay Rate ($/hr)"));
+    frame.add(new JLabel("Status"));
+
+    for (int i = 0; i < count; i++) {
+        serialNumbers[i] = random.nextInt(100000);
+        frame.add(new JLabel(String.valueOf(serialNumbers[i])));
+
+        kinFields[i] = new JTextField(10);
+        frame.add(kinFields[i]);
+
+        weightFields[i] = new JTextField(5);
+        frame.add(weightFields[i]);
+
+        payRateFields[i] = new JTextField(5);
+        frame.add(payRateFields[i]);
+
+        statusFields[i] = new JTextField(10);
+        frame.add(statusFields[i]);
+    }
+
+    JButton submitButton = new JButton("Submit");
+    submitButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            StringBuilder astronautData = new StringBuilder("Astronaut Information:\n");
+            for (int i = 0; i < astronautCount; i++) {
+                astronautData.append("Serial: ").append(serialNumbers[i]).append(", ")
+                        .append("Next of Kin: ").append(kinFields[i].getText()).append(", ")
+                        .append("Weight: ").append(weightFields[i].getText()).append(" kg, ")
+                        .append("Pay Rate: $").append(payRateFields[i].getText()).append("/hr, ")
+                        .append("Status: ").append(statusFields[i].getText()).append("\n");
+            }
+            JOptionPane.showMessageDialog(frame, astronautData.toString(), "Astronaut Details", JOptionPane.INFORMATION_MESSAGE);
+        }
+    });
+    frame.add(submitButton);
+
+    frame.setVisible(true);
+}
+
+}
+

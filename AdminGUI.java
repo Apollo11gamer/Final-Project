@@ -142,7 +142,7 @@ public class AdminGUI {
         statusField.setText("");
     }
 
-    public static void main(String[] args) {
+    public static void private() {
         SwingUtilities.invokeLater(AdminGUI::new);
     }
 }

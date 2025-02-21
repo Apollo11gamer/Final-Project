@@ -7,7 +7,7 @@ import java.awt.*;
 import java.io.*;
 import java.security.SecureRandom;
 import java.util.Base64;
-import password.PasswordGUI.java;
+import password.PasswordGUI;
 
 public class EntryPointGUI {
     private static final String USER_DATA_FILE = "userdata.enc";
@@ -32,7 +32,7 @@ public class EntryPointGUI {
         loginButton.addActionListener(e -> PasswordGUI.pass());
 
         JButton adminButton = new JButton("Admin");
-        adminButton.addActionListener(e -> AdminGUI.private());
+        adminButton.addActionListener(e -> AdminGUI.Admin());
 
         JButton exitButton = new JButton("Exit");
         exitButton.addActionListener(e -> System.exit(0));

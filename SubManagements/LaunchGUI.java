@@ -1,3 +1,7 @@
+package SubManagements;
+
+public class LaunchGUI {
+
 public void initiateLaunch() {
     launchButton.setEnabled(false);
     
@@ -43,4 +47,6 @@ public void initiateLaunch() {
 
     statusLabel.setText("Spacewalk complete. Beginning descent.");
     descend();
+}
+
 }

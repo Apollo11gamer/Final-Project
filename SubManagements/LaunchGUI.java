@@ -1,5 +1,6 @@
 package SubManagements;
 
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -63,7 +64,7 @@ public class LaunchGUI {
         countdownLabel.setText("Launch!");
         statusLabel.setText("Rocket is ascending...");
 
-        playSound("SubManagements/Accend.mp3"); // Start playing ascent sound
+        playSound("Music/Accend.mp3"); // Start playing ascent sound
 
         long spacewalkStartTime = 0;
 
@@ -150,14 +151,13 @@ public class LaunchGUI {
                 return;
             }
 
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
-            clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            clip.loop(Clip.LOOP_CONTINUOUSLY); // Play sound continuously
-            clip.start();
-
-            // Close the AudioInputStream to release resources
-            audioStream.close();
+            try (AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile)) {
+                clip = AudioSystem.getClip();
+                clip.open(audioStream);
+                clip.loop(Clip.LOOP_CONTINUOUSLY); // Play sound continuously
+                clip.start();
+                // Close the AudioInputStream to release resources
+            }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }

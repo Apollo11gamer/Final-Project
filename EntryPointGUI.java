@@ -32,7 +32,7 @@ public class EntryPointGUI {
         loginButton.addActionListener(e -> PasswordGUI.pass());
 
         JButton adminButton = new JButton("Admin");
-        adminButton.addActionListener(e -> adminAccess());
+        adminButton.addActionListener(e -> AdminGUI.private());
 
         JButton exitButton = new JButton("Exit");
         exitButton.addActionListener(e -> System.exit(0));

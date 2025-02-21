@@ -14,7 +14,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener; 
 import java.util.Random;
 
-public class SpaceManageGUI { private JFrame frame; private JTextField astronautCountField; private JButton nextButton;
+public class SpaceManageGUI { 
+    
+private JFrame frame; 
+private JTextField astronautCountField; 
+private JButton nextButton;
 
 public SpaceManageGUI() {
     JFrame frame = new JFrame("BAISD Astronaut Control Panel");
@@ -57,7 +61,14 @@ public static void ship() {
 
 }
 
-class AstronautDetailsGUI { private JFrame frame; private JTextField[] kinFields, weightFields, payRateFields, statusFields; private int[] serialNumbers; private int astronautCount; private Random random;
+class AstronautDetailsGUI { 
+
+private JFrame frame; 
+private JTextField[] kinFields, 
+weightFields, payRateFields, statusFields; 
+private int[] serialNumbers; 
+private int astronautCount; 
+private Random random;
 
 public AstronautDetailsGUI(int count) {
     this.astronautCount = count;

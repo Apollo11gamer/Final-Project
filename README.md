@@ -1,1 +1,1 @@
-# Final-Project
+This is the Final Priject for Computer programming at Bay Arenac ISD 2025. Made by Jaden Riley, Draken Deuel, and Alyssa 

@@ -1,27 +1,26 @@
+import java.awt.*;
+import java.io.*;
+import java.security.SecureRandom;
+import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.swing.*;
-import java.awt.*;
-import java.io.*;
-import java.security.SecureRandom;
-import java.util.Base64;
 import password.PasswordGUI;
 
 public class EntryPointGUI {
     private static final String USER_DATA_FILE = "userdata.enc";
     private static final String SECRET_KEY_FILE = "secret.key";
-    
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("BAISD Astronaut Control Panel");
         frame.setSize(400, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(4, 1)); // Adjusted grid layout
+        panel.setLayout(new GridLayout(4, 1));
 
-        // Conditionally add "Create User" button if no user exists
         if (!doesUserExist()) {
             JButton createUserButton = new JButton("Create User");
             createUserButton.addActionListener(e -> createUser());
@@ -32,7 +31,7 @@ public class EntryPointGUI {
         loginButton.addActionListener(e -> PasswordGUI.pass());
 
         JButton adminButton = new JButton("Admin");
-        adminButton.addActionListener(e -> AdminGUI.Admin());
+        adminButton.addActionListener(e -> adminAccess());
 
         JButton exitButton = new JButton("Exit");
         exitButton.addActionListener(e -> System.exit(0));
@@ -51,21 +50,61 @@ public class EntryPointGUI {
 
     private static void createUser() {
         String username = JOptionPane.showInputDialog("Enter username:");
-        if (username == null || username.isEmpty()) return;
+        if (username == null || username.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Username cannot be empty.");
+            return;
+        }
+
+        if (isUsernameTaken(username)) {
+            JOptionPane.showMessageDialog(null, "Username already exists. Please choose a different username.");
+            return;
+        }
+
+        JPasswordField passwordField = new JPasswordField();
+        int option = JOptionPane.showConfirmDialog(null, passwordField, "Enter password:", JOptionPane.OK_CANCEL_OPTION);
+        if (option != JOptionPane.OK_OPTION) return;
+
+        String password = new String(passwordField.getPassword());
+        if (password.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Password cannot be empty.");
+            return;
+        }
 
         try {
             SecretKey secretKey = generateOrLoadKey();
-            String encryptedData = encrypt(username, secretKey);
-            saveToFile(USER_DATA_FILE, encryptedData);
+            String encryptedData = encrypt(username + ":" + password, secretKey);
+
+            // Append instead of overwriting
+            try (FileWriter writer = new FileWriter(USER_DATA_FILE, true)) {
+                writer.write(encryptedData + "\n");
+            }
+
             JOptionPane.showMessageDialog(null, "User created successfully!");
+            // No need to restart application here; just update UI if necessary.
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error creating user.");
+            JOptionPane.showMessageDialog(null, "Error creating user: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private static void loginUser() {
-        JOptionPane.showMessageDialog(null, "Login functionality not implemented yet.");
+    private static boolean isUsernameTaken(String username) {
+        try {
+            SecretKey secretKey = generateOrLoadKey();
+            BufferedReader reader = new BufferedReader(new FileReader(USER_DATA_FILE));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String decryptedData = decrypt(line, secretKey);
+                String storedUsername = decryptedData.split(":")[0];
+                if (storedUsername.equals(username)) {
+                    reader.close();
+                    return true;
+                }
+            }
+            reader.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error checking username: " + e.getMessage());
+        }
+        return false;
     }
 
     private static void adminAccess() {
@@ -76,10 +115,16 @@ public class EntryPointGUI {
 
         try {
             SecretKey secretKey = generateOrLoadKey();
-            String decryptedData = decrypt(loadFromFile(USER_DATA_FILE), secretKey);
-            JOptionPane.showMessageDialog(null, "Admin Access Granted.\nUser Data: " + decryptedData);
+            StringBuilder decryptedData = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new FileReader(USER_DATA_FILE));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                decryptedData.append(decrypt(line, secretKey)).append("\n");
+            }
+            reader.close();
+            JOptionPane.showMessageDialog(null, "Admin Access Granted.\nUser Data:\n" + decryptedData.toString());
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error accessing admin data.");
+            JOptionPane.showMessageDialog(null, "Error accessing admin data: " + e.getMessage());
             e.printStackTrace();
         }
     }

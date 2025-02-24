@@ -64,15 +64,15 @@ public class PasswordGUI {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
 
+        // Check if the user exists in userdata
         if (PasswordStorage.userExists(username)) {
             try {
+                // Retrieve the stored password for the username
                 String storedPassword = PasswordStorage.getPassword(username);
+                // Verify the entered password against the stored password
                 if (storedPassword.equals(password)) {
                     outputArea.setText("Welcome " + username + "!");
-                    verifyEmail();
-                    // Optionally return to the EntryPointGUI here, e.g.:
-                    // frame.dispose(); // Close this frame
-                    // EntryPointGUI.main(new String[]{}); // Reopen the main GUI
+                    verifyEmail(); // Optional email verification
                 } else {
                     outputArea.setText("Invalid password!");
                     logFailedAttempt(username);
@@ -92,7 +92,7 @@ public class PasswordGUI {
         String serialNumber = generateSerialNumber();
 
         try {
-            PasswordStorage.savePassword(username, password, serialNumber); // Ensure this saves correctly
+            PasswordStorage.savePassword(username, password, serialNumber); // Save new user data
             outputArea.setText("Registration successful!");
         } catch (Exception e) {
             outputArea.setText("Error registering: " + e.getMessage());

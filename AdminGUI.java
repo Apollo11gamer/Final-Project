@@ -1,16 +1,15 @@
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.*;
 
 public class AdminGUI {
     private static final String ADMIN_USERNAME = "Admin";
-    private static final String ADMIN_PASSWORD = "Kruskie25!";
+    private static String ADMIN_PASSWORD = "Kruskie25!";
     
     private JFrame frame;
     private JTextArea displayArea;
-    private JTextField nameField, serialField, statusField;
+    private JTextField nameField;
     private Map<String, Astronaut> astronautDatabase = new HashMap<>();
 
     public AdminGUI() {
@@ -40,61 +39,59 @@ public class AdminGUI {
         JScrollPane scrollPane = new JScrollPane(displayArea);
 
         JPanel controlPanel = new JPanel();
-        controlPanel.setLayout(new GridLayout(5, 2));
+        controlPanel.setLayout(new GridLayout(4, 2));
 
         nameField = new JTextField();
-        serialField = new JTextField();
-        statusField = new JTextField();
 
         JButton addButton = new JButton("Add Astronaut");
         JButton removeButton = new JButton("Remove Astronaut");
         JButton editButton = new JButton("Edit Astronaut");
+        JButton changePasswordButton = new JButton("Change Password");
 
         addButton.addActionListener(e -> addAstronaut());
         removeButton.addActionListener(e -> removeAstronaut());
         editButton.addActionListener(e -> editAstronaut());
+        changePasswordButton.addActionListener(e -> changePassword());
 
         controlPanel.add(new JLabel("Name:"));
         controlPanel.add(nameField);
-        controlPanel.add(new JLabel("Serial No:"));
-        controlPanel.add(serialField);
-        controlPanel.add(new JLabel("Status:"));
-        controlPanel.add(statusField);
         controlPanel.add(addButton);
         controlPanel.add(removeButton);
         controlPanel.add(editButton);
+        controlPanel.add(changePasswordButton);
 
         frame.add(scrollPane, BorderLayout.CENTER);
         frame.add(controlPanel, BorderLayout.SOUTH);
+
+        // Show existing users when the GUI starts
+        displayData();
 
         frame.setVisible(true);
     }
 
     private void addAstronaut() {
         String name = nameField.getText();
-        String serial = serialField.getText();
-        String status = statusField.getText();
 
-        if (name.isEmpty() || serial.isEmpty() || status.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
+        if (name.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "Name field is required!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        astronautDatabase.put(serial, new Astronaut(name, serial, status));
+        astronautDatabase.put(name, new Astronaut(name));
         displayData();
         clearFields();
     }
 
     private void removeAstronaut() {
-        String serial = serialField.getText();
-        if (!astronautDatabase.containsKey(serial)) {
+        String name = nameField.getText();
+        if (!astronautDatabase.containsKey(name)) {
             JOptionPane.showMessageDialog(frame, "Astronaut not found!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         String confirmation = JOptionPane.showInputDialog("Type DELETE to confirm removal:");
         if ("DELETE".equals(confirmation)) {
-            astronautDatabase.remove(serial);
+            astronautDatabase.remove(name);
             displayData();
         } else {
             JOptionPane.showMessageDialog(frame, "Deletion cancelled.", "Error", JOptionPane.WARNING_MESSAGE);
@@ -102,8 +99,8 @@ public class AdminGUI {
     }
 
     private void editAstronaut() {
-        String serial = serialField.getText();
-        if (!astronautDatabase.containsKey(serial)) {
+        String name = nameField.getText();
+        if (!astronautDatabase.containsKey(name)) {
             JOptionPane.showMessageDialog(frame, "Astronaut not found!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -114,19 +111,33 @@ public class AdminGUI {
             return;
         }
 
-        String name = nameField.getText();
-        String status = statusField.getText();
-
-        if (name.isEmpty() || status.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "All fields must be filled!", "Error", JOptionPane.ERROR_MESSAGE);
+        String newName = JOptionPane.showInputDialog("Enter new name:");
+        if (newName.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "Name must be filled!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        Astronaut astronaut = astronautDatabase.get(serial);
-        astronaut.setName(name);
-        astronaut.setStatus(status);
+        Astronaut astronaut = astronautDatabase.get(name);
+        astronaut.setName(newName);
         displayData();
         clearFields();
+    }
+
+    private void changePassword() {
+        String currentPassword = JOptionPane.showInputDialog("Enter Current Password:");
+        if (!ADMIN_PASSWORD.equals(currentPassword)) {
+            JOptionPane.showMessageDialog(frame, "Incorrect Current Password!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String newPassword = JOptionPane.showInputDialog("Enter New Password:");
+        if (newPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "New password cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        ADMIN_PASSWORD = newPassword; // Update the password
+        JOptionPane.showMessageDialog(frame, "Password changed successfully!");
     }
 
     private void displayData() {
@@ -138,8 +149,6 @@ public class AdminGUI {
 
     private void clearFields() {
         nameField.setText("");
-        serialField.setText("");
-        statusField.setText("");
     }
 
     public static void Admin() {
@@ -149,25 +158,17 @@ public class AdminGUI {
 
 class Astronaut {
     private String name;
-    private String serialNumber;
-    private String status;
 
-    public Astronaut(String name, String serialNumber, String status) {
+    public Astronaut(String name) {
         this.name = name;
-        this.serialNumber = serialNumber;
-        this.status = status;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     @Override
     public String toString() {
-        return "Name: " + name + ", Serial No: " + serialNumber + ", Status: " + status;
+        return "Name: " + name;
     }
 }

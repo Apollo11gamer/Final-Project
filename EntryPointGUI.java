@@ -12,12 +12,15 @@ import password.PasswordGUI;
 public class EntryPointGUI {
     private static final String USER_DATA_FILE = "userdata.enc";
     private static final String SECRET_KEY_FILE = "secret.key";
+    private static final String ADMIN_PASS_FILE = "AdminPass.enc"; // File to store encrypted admin password
 
     public static void main(String[] args) {
+        // Initialize the admin password on first run (only if the file doesn't exist)
+        initializeAdminPassword();
+        
         JFrame frame = new JFrame("BAISD Astronaut Control Panel");
         frame.setSize(400, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(4, 1));
 
@@ -44,43 +47,67 @@ public class EntryPointGUI {
         frame.setVisible(true);
     }
 
+    private static void initializeAdminPassword() {
+        // Check if the admin password file exists, if not create it
+        File adminPassFile = new File(ADMIN_PASS_FILE);
+        if (!adminPassFile.exists()) {
+            try {
+                String defaultAdminPassword = "Kruskie25!";
+                SecretKey secretKey = generateOrLoadKey(); // Load or generate encryption key
+                String encryptedPassword = encrypt(defaultAdminPassword, secretKey);
+
+                // Write encrypted password to file
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(ADMIN_PASS_FILE))) {
+                    writer.write(encryptedPassword);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private static boolean doesUserExist() {
         return new File(USER_DATA_FILE).exists();
     }
 
     private static void createUser() {
+        System.out.println("Create user function triggered.");
+    
         String username = JOptionPane.showInputDialog("Enter username:");
         if (username == null || username.trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Username cannot be empty.");
             return;
         }
-
+    
+        // Debug: Check if username already exists
         if (isUsernameTaken(username)) {
             JOptionPane.showMessageDialog(null, "Username already exists. Please choose a different username.");
             return;
         }
-
+    
+        // Prompt for password
         JPasswordField passwordField = new JPasswordField();
         int option = JOptionPane.showConfirmDialog(null, passwordField, "Enter password:", JOptionPane.OK_CANCEL_OPTION);
         if (option != JOptionPane.OK_OPTION) return;
-
+    
         String password = new String(passwordField.getPassword());
         if (password.trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Password cannot be empty.");
             return;
         }
-
+    
         try {
-            SecretKey secretKey = generateOrLoadKey();
+            SecretKey secretKey = generateOrLoadKey(); // Load or generate encryption key
             String encryptedData = encrypt(username + ":" + password, secretKey);
-
-            // Append instead of overwriting
-            try (FileWriter writer = new FileWriter(USER_DATA_FILE, true)) {
-                writer.write(encryptedData + "\n");
+    
+            // Write encrypted user data to file
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_DATA_FILE, true))) {
+                writer.write(encryptedData);
+                writer.newLine();
             }
-
+    
             JOptionPane.showMessageDialog(null, "User created successfully!");
-            // No need to restart application here; just update UI if necessary.
+            System.out.println("User created and saved.");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error creating user: " + e.getMessage());
             e.printStackTrace();
@@ -88,21 +115,36 @@ public class EntryPointGUI {
     }
 
     private static boolean isUsernameTaken(String username) {
+        System.out.println("Checking if username exists: " + username);
+        
+        if (!new File(USER_DATA_FILE).exists()) {
+            return false; // No user file means no users exist yet
+        }
+    
         try {
             SecretKey secretKey = generateOrLoadKey();
             BufferedReader reader = new BufferedReader(new FileReader(USER_DATA_FILE));
             String line;
+    
             while ((line = reader.readLine()) != null) {
-                String decryptedData = decrypt(line, secretKey);
-                String storedUsername = decryptedData.split(":")[0];
-                if (storedUsername.equals(username)) {
-                    reader.close();
-                    return true;
+                try {
+                    String decryptedData = decrypt(line, secretKey);
+                    String storedUsername = decryptedData.split(":")[0];
+    
+                    System.out.println("Decrypted username from file: " + storedUsername);
+    
+                    if (storedUsername.equals(username)) {
+                        reader.close();
+                        return true;
+                    }
+                } catch (Exception e) {
+                    System.err.println("Skipping invalid encrypted entry.");
                 }
             }
             reader.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error checking username: " + e.getMessage());
+            e.printStackTrace();
         }
         return false;
     }
@@ -113,18 +155,30 @@ public class EntryPointGUI {
             return;
         }
 
+        // Prompt for admin password
+        JPasswordField passwordField = new JPasswordField();
+        int option = JOptionPane.showConfirmDialog(null, passwordField, "Enter Admin Password:", JOptionPane.OK_CANCEL_OPTION);
+        if (option != JOptionPane.OK_OPTION) return;
+
+        String adminPassword = new String(passwordField.getPassword());
+        String storedEncryptedPassword;
+
+        // Load the encrypted admin password from file
         try {
             SecretKey secretKey = generateOrLoadKey();
-            StringBuilder decryptedData = new StringBuilder();
-            BufferedReader reader = new BufferedReader(new FileReader(USER_DATA_FILE));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                decryptedData.append(decrypt(line, secretKey)).append("\n");
+            storedEncryptedPassword = loadFromFile(ADMIN_PASS_FILE);
+            String decryptedAdminPassword = decrypt(storedEncryptedPassword, secretKey);
+
+            if (!adminPassword.equals(decryptedAdminPassword)) {
+                JOptionPane.showMessageDialog(null, "Access Denied! Incorrect password.");
+                return;
             }
-            reader.close();
-            JOptionPane.showMessageDialog(null, "Admin Access Granted.\nUser Data:\n" + decryptedData.toString());
+
+            // Open AdminGUI after successful login
+            JOptionPane.showMessageDialog(null, "Admin Access Granted.");
+            SwingUtilities.invokeLater(() -> new AdminGUI());
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error accessing admin data: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error loading admin password: " + e.getMessage());
             e.printStackTrace();
         }
     }

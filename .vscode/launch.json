@@ -9,7 +9,11 @@
             "name": "EntryPointGUI",
             "request": "launch",
             "mainClass": "EntryPointGUI",
+<<<<<<< Updated upstream
             "projectName": "Final-Project_c0f7f328"
+=======
+            "projectName": "Final-Project_7226eddc"
+>>>>>>> Stashed changes
         },
         {
             "type": "java",

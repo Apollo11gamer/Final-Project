@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "SpaceManageGUI",
+            "request": "launch",
+            "mainClass": "SubManagements.SpaceManageGUI",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
             "name": "AudioPlayer",
             "request": "launch",
             "mainClass": "AudioPlayer",

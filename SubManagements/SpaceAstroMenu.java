@@ -21,8 +21,7 @@ public class SpaceAstroMenu {
     System.out.println("3. Remove astronauts");
     System.out.println("\nSPACESHIP OPTIONS");
     System.out.println("4. Create spaceships");
-    System.out.println("5. Edit spaceships");
-    System.out.println("6. Remove spaceships");
+    System.out.println("5. Prepare spaceships");
 
     System.out.print("\nEnter choice: ");
 
@@ -34,8 +33,6 @@ public class SpaceAstroMenu {
 
         int choice = kbd.nextInt();
         kbd.nextLine(); // Consume newline
-
-
         
         try {
         switch (choice) {
@@ -43,8 +40,7 @@ public class SpaceAstroMenu {
         case 2 -> System.out.println("You are editing an astronaut");
         case 3 -> System.out.println("You are removing an astronaut");
         case 4 -> System.out.println("You are creating a spaceship");
-        case 5 -> System.out.println("You are editing a spaceship");
-        case 6 -> System.out.println("You are removing an astronaut");
+        case 5 -> System.out.println("You are preparing a spaceship to launch");
         }
         }
         catch (Exception e) {
@@ -55,26 +51,30 @@ public class SpaceAstroMenu {
     }
 
     public static void createAstronaut() {
-    String name; // String for the name of the astronaut.
-    double weight; // Double for the weight of the astronaut in pounds.
+    String name = ""; // String for the name of the astronaut.
+    double weight = 0; // Double for the weight of the astronaut in pounds.
     Scanner kbd = new Scanner(System.in);
 
     // Prompts the user to enter a name for the astronaut, then stores the input in name while trimming any whitespace.
     System.out.println("What is the name of the astronaut?");
     name = kbd.nextLine().trim();
+    while(name.isEmpty()) {
+    System.out.println("Invalid input! Do not enter an empty space. Enter a name:"); 
+    name = kbd.nextLine().trim();
+    }
 
     // Prompts the user to enter an amount of pounds the astronaut weighs, then stores the input in weight.
     // If the amount entered is a double value, it will go through. If it is not, a message will tell the user that the input is invalid.
     System.out.println("What is the weight (in lbs) of the astronaut?");
-    while (!kbd.hasNextDouble()) {
-    System.out.println("Invalid input! Please enter a valid weight:");
+    while(!kbd.hasNextDouble()) {
+    System.out.println("Invalid input! Please enter an integer/decimal number:");
     kbd.next(); // Consume invalid input    
     } 
-
     weight = kbd.nextDouble();
     kbd.nextLine(); // Consume the newline character
 
     System.out.println("Successfully made an astronaut!");
+
     saveAstronautInfo(name, weight);
     MENU();
 
@@ -84,7 +84,7 @@ public class SpaceAstroMenu {
     String filePath = "astronautsInfo.txt";
 
     try (BufferedWriter author = new BufferedWriter(new FileWriter(filePath, true))) {
-    author.write(name + "," + weight);
+    author.write(name + ", " + weight);
     author.newLine();
     System.out.println("Astronaut data saved.");
     }

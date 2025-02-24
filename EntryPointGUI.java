@@ -26,18 +26,18 @@ public class EntryPointGUI {
 
         if (!doesUserExist()) {
             JButton createUserButton = new JButton("Create User");
-            createUserButton.addActionListener(e -> createUser());
+            createUserButton.addActionListener(_ -> createUser());
             panel.add(createUserButton);
         }
 
         JButton loginButton = new JButton("Login");
-        loginButton.addActionListener(e -> PasswordGUI.pass());
+        loginButton.addActionListener(_ -> PasswordGUI.pass());
 
         JButton adminButton = new JButton("Admin");
-        adminButton.addActionListener(e -> adminAccess());
+        adminButton.addActionListener(_ -> adminAccess());
 
         JButton exitButton = new JButton("Exit");
-        exitButton.addActionListener(e -> System.exit(0));
+        exitButton.addActionListener(_ -> System.exit(0));
 
         panel.add(loginButton);
         panel.add(adminButton);

@@ -9,7 +9,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 public class KeyManagement {
-    private static final String SECRET_KEY_FILE = "secret_key.txt"; // Path for storing the secret key
+    private static final String SECRET_KEY_FILE = "secret.key"; // Path for storing the secret key
 
     // Generate or load the AES secret key
     public static SecretKey generateOrLoadKey() throws Exception {

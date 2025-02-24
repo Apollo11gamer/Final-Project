@@ -50,11 +50,11 @@ public class PhoneNumberVerifier {
             inputPhoneNumber = scanner.nextLine();
 
             if (isValidPhoneNumber(inputPhoneNumber)) {
-                System.out.println("Valid phone number! ✅");
+                System.out.println("Valid phone number!");
                 proceedToNextFile();
                 break; // Exit the loop if valid
             } else {
-                System.out.println("Invalid phone number! ❌ Please try again.");
+                System.out.println("Invalid phone number! Please try again.");
                 attempts++;
             }
 
@@ -69,7 +69,7 @@ public class PhoneNumberVerifier {
 
         private static void proceedToNextFile() {
         try {
-            System.out.println("Proceeding to Space ship management...");
+            System.out.println("Proceeding to Spaceship management...");
             SpaceshipManagement.Ship(); // Ensure this class and method exist
         } catch (Exception e) {
             System.out.println("Error proceeding to the next file: " + e.getMessage());

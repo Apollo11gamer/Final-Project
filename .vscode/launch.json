@@ -6,6 +6,34 @@
     "configurations": [
         {
             "type": "java",
+            "name": "AudioPlayer",
+            "request": "launch",
+            "mainClass": "AudioPlayer",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
+            "name": "LaunchGUI",
+            "request": "launch",
+            "mainClass": "LaunchGUI",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
+            "name": "LaunchGUI",
+            "request": "launch",
+            "mainClass": "SubManagements.LaunchGUI",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
+            "name": "EntryPointGUI",
+            "request": "launch",
+            "mainClass": "EntryPointGUI",
+            "projectName": "Final-Project_d16c68b9"
+        },
+        {
+            "type": "java",
             "name": "EntryPointGUI",
             "request": "launch",
             "mainClass": "EntryPointGUI",

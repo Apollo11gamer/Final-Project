@@ -1,9 +1,13 @@
+package SubManagements;
+
+public class LaunchGUI {
+
 public void initiateLaunch() {
     launchButton.setEnabled(false);
     
     for (int i = 10; i >= 0; i--) {
         countdownLabel.setText("T-" + i + " seconds...");
-        sleep(1000);
+        Thread.sleep(1000);
     }
 
     countdownLabel.setText("Launch!");
@@ -36,11 +40,13 @@ public void initiateLaunch() {
     while ((System.nanoTime() - spacewalkStartTime) / 1_000_000_000 < 30) {
         long timeRemaining = 30 - ((System.nanoTime() - spacewalkStartTime) / 1_000_000_000);
         countdownLabel.setText("Spacewalk: " + timeRemaining + " sec left");
-        sleep(1000);
+        Thread.sleep(1000);
     }
 
     stopSound(); // Stop spacewalk sound
 
     statusLabel.setText("Spacewalk complete. Beginning descent.");
     descend();
+}
+
 }

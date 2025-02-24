@@ -10,11 +10,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map.Entry;
 import java.util.Random;
 import SubManagements.EmailVerifier;
-import password.PasswordStorage;
-import password.PasswordStorage.User;
 
 public class PasswordGUI {
     private static final String LOG_FILE = "login_attempts_log.txt";
@@ -22,7 +19,7 @@ public class PasswordGUI {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JTextArea outputArea;
-    
+
     public PasswordGUI() {
         frame = new JFrame("Password Manager");
         frame.setSize(400, 300);
@@ -34,7 +31,7 @@ public class PasswordGUI {
         JLabel passLabel = new JLabel("Password:");
         passwordField = new JPasswordField(20);
         JButton loginButton = new JButton("Login");
-        JButton registerButton = new JButton("Register");
+        JButton exitButton = new JButton("Exit");
         outputArea = new JTextArea(5, 30);
         outputArea.setEditable(false);
 
@@ -45,10 +42,10 @@ public class PasswordGUI {
             }
         });
 
-        registerButton.addActionListener(new ActionListener() {
+        exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                register();
+                frame.dispose(); // Close the Password GUI when exiting
             }
         });
 
@@ -57,7 +54,7 @@ public class PasswordGUI {
         frame.add(passLabel);
         frame.add(passwordField);
         frame.add(loginButton);
-        frame.add(registerButton);
+        frame.add(exitButton);
         frame.add(new JScrollPane(outputArea));
 
         frame.setVisible(true);
@@ -73,6 +70,9 @@ public class PasswordGUI {
                 if (storedPassword.equals(password)) {
                     outputArea.setText("Welcome " + username + "!");
                     verifyEmail();
+                    // Optionally return to the EntryPointGUI here, e.g.:
+                    // frame.dispose(); // Close this frame
+                    // EntryPointGUI.main(new String[]{}); // Reopen the main GUI
                 } else {
                     outputArea.setText("Invalid password!");
                     logFailedAttempt(username);
@@ -92,7 +92,7 @@ public class PasswordGUI {
         String serialNumber = generateSerialNumber();
 
         try {
-            PasswordStorage.savePassword(username, password, serialNumber);
+            PasswordStorage.savePassword(username, password, serialNumber); // Ensure this saves correctly
             outputArea.setText("Registration successful!");
         } catch (Exception e) {
             outputArea.setText("Error registering: " + e.getMessage());
@@ -102,7 +102,7 @@ public class PasswordGUI {
     private void verifyEmail() {
         String email = JOptionPane.showInputDialog(frame, "Enter your email for verification:");
         if (email != null && !email.isEmpty()) {
-            EmailVerifier.Email();
+            EmailVerifier.Email(); // Ensure this works correctly
         } else {
             outputArea.setText("Email verification failed. Please try again.");
         }

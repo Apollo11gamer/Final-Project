@@ -55,7 +55,7 @@ public class SpaceshipManagement {
     private static void proceedToNextFile() {
         try {
             System.out.println("Proceeding to Launch sequence...");
-            LaunchGUI.launch();
+            
         } catch (Exception e) {
             System.out.println("Error starting Launch sequence: " + e.getMessage());
         }

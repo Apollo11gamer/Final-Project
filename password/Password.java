@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Scanner;
@@ -255,10 +256,14 @@ public class Password {
             return;
         }
 
-        if (PasswordStorage.removePassword(usernameToRemove)) {
-            System.out.println("User removed successfully!");
-        } else {
-            System.out.println("User not found.");
+        try {
+            if (PasswordStorage.removePassword(usernameToRemove)) {
+                System.out.println("User removed successfully!");
+            } else {
+                System.out.println("User not found.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -266,7 +271,8 @@ public class Password {
     private static void viewUsers() {
         System.out.println("Registered Users:");
         // Iterating through all the users
-        for (Entry<String, User> entry : PasswordStorage.getAllUsers().entrySet()) {
+        Map<String, User> users = PasswordStorage.getAllUsers();
+        for (Entry<String, User> entry : users.entrySet()) {
             String username = entry.getKey();
             User user = entry.getValue();
             System.out.println("- Username: " + username);

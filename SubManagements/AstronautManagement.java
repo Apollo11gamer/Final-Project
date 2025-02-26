@@ -38,7 +38,7 @@ public class AstronautManagement {
     private static void proceedToNextFile() {
         try {
             System.out.println("Proceeding to Phone number verifier...");
-            PhoneNumberVerifierGUI.Phone(); // Ensure this class and method exist
+            // Ensure this class and method exist
         } catch (Exception e) {
             System.out.println("Error proceeding to the next file: " + e.getMessage());
         }

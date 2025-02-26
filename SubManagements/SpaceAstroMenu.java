@@ -1,8 +1,6 @@
 package SubManagements;
 import java.util.Scanner;
-
-import password.PasswordStorage;
-
+import password.Password;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -11,7 +9,7 @@ import java.io.FileReader;
 
 public class SpaceAstroMenu {
     
-    private static final String astronautsFile = "astronautsInfo.txt";
+    public static final String astronautsFile = "astronautsInfo.txt";
     SpaceAstroMenu object = new SpaceAstroMenu();
     public static void main(String[] args) {
      
@@ -31,6 +29,8 @@ public class SpaceAstroMenu {
         System.out.println("\nSPACESHIP OPTIONS");
         System.out.println("4. Create spaceships");
         System.out.println("5. Prepare spaceships");
+        System.out.println("\nEXIT MENU");
+        System.out.println("6. Exit");
 
         System.out.print("\nEnter choice: ");
 
@@ -47,9 +47,10 @@ public class SpaceAstroMenu {
         switch (choice) {
             case 1 -> createAstronaut();
             case 2 -> editAstronautsFile(astronautsFile);
-            case 3 -> System.out.println("You are removing an astronaut");
-            case 4 -> System.out.println("You are creating a spaceship");
-            case 5 -> System.out.println("You are preparing a spaceship to launch");
+            case 3 -> removeAstronaut();
+            case 4 -> createSpaceship();
+            case 5 -> prepareLaunch();
+            case 6 -> Password.pass();
         }
         }
         catch (Exception e) {
@@ -107,12 +108,15 @@ public class SpaceAstroMenu {
 
         Scanner kbd = new Scanner(System.in);
 
+        StringBuilder fileContent = new StringBuilder();
+        String astronautLine = "";
+        int astronautNumber = 1;
+
         System.out.println("\nHere is the list of astronauts and their details to edit.");
         try (BufferedReader reader = new BufferedReader(new FileReader(astronautsFile))) {
-            String astronautLine = "";
-            int astronautNumber = 1;
             // Read and print each line of the file
             while ((astronautLine = reader.readLine()) != null) {
+                fileContent.append(astronautLine).append("\n");
                 System.out.println(astronautNumber + ". " + astronautLine);
                 astronautNumber++;
             }
@@ -139,12 +143,28 @@ public class SpaceAstroMenu {
             editChoice = kbd.nextInt();
         }
 
-            switch (editChoice) {
-                case 1 -> returnName();
-                case 2 -> returnWeight();
+        String newName = "";
+        double newWeight = 0;
+        String updatedAstronaut = "";
+
+            try {
+                switch (editChoice) {
+                case 1 : newName = returnName();
+                updatedAstronaut = updateAstronautInfo(astronautChoice, newName, null);
+                break;
+                case 2 : newWeight = returnWeight();
+                updatedAstronaut = updateAstronautInfo(astronautChoice, null, newWeight);
+                break;
+                default : System.out.println("Invalid choice.");
+                break;
+            }
+            }
+            catch (Exception e) {
+                System.out.println("\nAn unexpected error occurred: " + e.getMessage());
+                e.printStackTrace();
             }
             
-            MENU(); // Go back to menu if the user does exist
+             MENU(); // Go back to menu if the astronaut does exist (after astronaut is edited)
         
     }
 
@@ -181,5 +201,55 @@ public class SpaceAstroMenu {
         newWeight = kbd.nextDouble();
         return newWeight;
     }
+
+    public static String updateAstronautInfo(String oldName, String newName, Double newWeight) {
+     String updatedAstronaut = "";
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(astronautsFile))) {
+     String line;
+    while ((line = reader.readLine()) != null) {
+    String[] astronautDetails = line.split(", ");
+    String currentName = astronautDetails[0];
+    double currentWeight = Double.parseDouble(astronautDetails[1]);
+    if (currentName.equalsIgnoreCase(oldName)) {
+        if (newName != null) {
+            currentName = newName;
+        }
+        if (newWeight != null) {
+            currentWeight = newWeight;
+        }
+        updatedAstronaut = currentName + ", " + currentWeight;
+        break;
+    }
+    }
+    }
+    catch (IOException e) {
+        System.out.println("Error message: " + e.getMessage());
+    }
+    return updatedAstronaut;
+    }
         
+    public static void saveUpdatedAstronautInfo(StringBuilder fileContent, String updatedAstronaut) {
+    try(BufferedWriter author = new BufferedWriter(new FileWriter(astronautsFile, true))) {
+    String updatedFileContent = fileContent.toString().replaceFirst("(?m)^" + updatedAstronaut.split(", ")[0] + ", .+", updatedAstronaut);
+    author.write(updatedFileContent);
+    System.out.println("Astronaut details updated successfully.");
+    }
+    catch (IOException e) {
+        System.out.println("Error saving updated astronaut details: " + e.getMessage());
+    }
+    }
+
+    public static void removeAstronaut() {
+
+    }
+
+    public static void createSpaceship() {
+
+    }
+
+    public static void prepareLaunch() {
+
+    }
+
     }

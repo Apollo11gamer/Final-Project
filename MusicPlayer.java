@@ -1,32 +1,61 @@
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.UnsupportedAudioFileException;
+
+
+import java.io.File;
+import java.io.IOException;
+import javax.sound.sampled.*;
 
 public class MusicPlayer {
+    private Clip clip; // For .wav files
+    private Thread mp3Thread;
 
-    public static void main(String[] args) {
-        playMusic("resources/Spaceflight Simulator - Cosmic Ocean (Official Soundtrack).mp3"); // Replace with your music file path
+    // Play an audio file (auto-detect format)
+    public void play(String filePath) {
+        if (filePath.endsWith(".wav")) {
+            playWav(filePath);
+        } else {
+            System.out.println("Unsupported file format: " + filePath);
+        }
     }
 
-    public static void playMusic(String filePath) {
+    // Stop the currently playing sound
+    public void stop() {
+        if (clip != null && clip.isRunning()) {
+            clip.stop();
+        }
+    }
+
+    // Play a .wav file
+    private void playWav(String filePath) {
         try {
-            // Create an AudioInputStream from the sound file
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new java.io.File(filePath));
+            File soundFile = new File(filePath = "Accend.wav");
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+            clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Main method for testing
+    public static void Music() {
+        MusicPlayer player = new MusicPlayer();
+        player.play("Music/Spaceflight Simulator - Deep Space (Official Soundtrack).wav"); // Change to a valid file path
+    }
+
+    public void InSpace() {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource("Music/Spaceflight Simulator - Deep Space (Official Soundtrack).wav")
+            );
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
-            clip.start(); // Start playing the music
-            
-            // Keep the program running until the music is done playing
-            System.out.println("Playing music...");
-            while (clip.isRunning()) {
-                Thread.sleep(1000);
-            }
-            clip.close();
-        } catch (UnsupportedAudioFileException e) {
-            System.err.println("Audio file format is unsupported: " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+            Thread.sleep(clip.getMicrosecondLength() / 1000); // Keep thread alive
+            clip.start();
+            // If you want the sound to loop infinitely, then put: clip.loop(Clip.LOOP_CONTINUOUSLY); 
+            // If you want to stop the sound, then use clip.stop();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }

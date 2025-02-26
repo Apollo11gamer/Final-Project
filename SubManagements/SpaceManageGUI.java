@@ -16,6 +16,7 @@ public class SpaceManageGUI {
         frame.setSize(350, 150);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
+        frame.setMinimumSize(new Dimension(300, 100)); // Set minimum size
 
         // Input Panel
         JPanel inputPanel = new JPanel();
@@ -48,10 +49,15 @@ public class SpaceManageGUI {
 
         // Center and display
         frame.setLocationRelativeTo(null);
+        astronautCountField.requestFocusInWindow(); // Focus on the input field
         frame.setVisible(true);
     }
 
     public static void ship() {
         SwingUtilities.invokeLater(SpaceManageGUI::new);
+    }
+
+    public static void main(String[] args) {
+        ship(); // Start the GUI
     }
 }

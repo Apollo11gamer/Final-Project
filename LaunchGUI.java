@@ -1,5 +1,8 @@
+
+
 import java.awt.*;
 import javax.swing.*;
+
 
 public class LaunchGUI {
     private static final double SPACEWALK_ALTITUDE = 400000; // Approximate ISS orbit altitude in meters
@@ -26,25 +29,49 @@ public class LaunchGUI {
         frame.setSize(500, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new GridLayout(6, 1));
-
+        frame.getContentPane().setBackground(Color.BLACK); // Set background color
+    
         countdownLabel = new JLabel("Pre-launch Checks in Progress...");
         statusLabel = new JLabel("Awaiting launch...");
         fuelLabel = new JLabel("Fuel: " + currentFuel + " kg");
         speedLabel = new JLabel("Speed: " + currentSpeed + " m/s");
         altitudeLabel = new JLabel("Altitude: " + currentAltitude + " m");
-
+    
         launchButton = new JButton("Launch");
         launchButton.addActionListener(_ -> initiateLaunch());
-
+    
+        // Set text color and background
+        Color textColor = Color.GREEN;
+        countdownLabel.setForeground(textColor);
+        statusLabel.setForeground(textColor);
+        fuelLabel.setForeground(textColor);
+        speedLabel.setForeground(textColor);
+        altitudeLabel.setForeground(textColor);
+        launchButton.setForeground(textColor);
+        launchButton.setBackground(Color.DARK_GRAY); // Button background
+    
+        // Make labels background match the frame
+        countdownLabel.setOpaque(true);
+        countdownLabel.setBackground(Color.BLACK);
+        statusLabel.setOpaque(true);
+        statusLabel.setBackground(Color.BLACK);
+        fuelLabel.setOpaque(true);
+        fuelLabel.setBackground(Color.BLACK);
+        speedLabel.setOpaque(true);
+        speedLabel.setBackground(Color.BLACK);
+        altitudeLabel.setOpaque(true);
+        altitudeLabel.setBackground(Color.BLACK);
+    
         frame.add(countdownLabel);
         frame.add(statusLabel);
         frame.add(fuelLabel);
         frame.add(speedLabel);
         frame.add(altitudeLabel);
         frame.add(launchButton);
-
+    
         frame.setVisible(true);
     }
+    
 
     public void initiateLaunch() {
         launchButton.setEnabled(false);
@@ -65,7 +92,8 @@ public class LaunchGUI {
                 }
 
                 publish("Liftoff! Rocket is ascending...");
-                playSound("Music/Spaceflight Simulator - Cosmic Ocean (Official Soundtrack).mp3");
+                AudioPlayer test = new AudioPlayer();
+                test.sound();
 
                 // Ascent Phase
                 while (currentFuel > 0 && currentAltitude < SPACEWALK_ALTITUDE) {
@@ -91,7 +119,8 @@ public class LaunchGUI {
 
                 stopSound();
                 publish("Orbit Achieved. Spacewalk in Progress...");
-                playSound("SubManagements/InSpace.mp3");
+                MusicPlayer Inspace = new MusicPlayer();
+        Inspace.InSpace();
 
                 Thread.sleep(30000); // Simulate time spent in orbit
 
@@ -150,7 +179,9 @@ public class LaunchGUI {
         }
     }
 
-    public static void main(String[] args) {
+    public static void launch() {
         SwingUtilities.invokeLater(LaunchGUI::new);
+        
     }
+
 }

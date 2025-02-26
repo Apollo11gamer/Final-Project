@@ -1,3 +1,5 @@
+
+
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.*;
@@ -39,5 +41,21 @@ public class AudioPlayer {
     public static void main(String[] args) {
         AudioPlayer player = new AudioPlayer();
         player.play("Accend.wav"); // Change to a valid file path
+    }
+
+    public void sound() {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource("Music/Spaceflight Simulator - Cosmic Ocean (Official Soundtrack).wav")
+            );
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+            Thread.sleep(clip.getMicrosecondLength() / 1000); // Keep thread alive
+            clip.start();
+            // If you want the sound to loop infinitely, then put: clip.loop(Clip.LOOP_CONTINUOUSLY); 
+            // If you want to stop the sound, then use clip.stop();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

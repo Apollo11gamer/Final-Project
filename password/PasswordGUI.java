@@ -86,7 +86,7 @@ public class PasswordGUI {
         }
     }
 
-    private void register() {
+    public void register() {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
         String serialNumber = generateSerialNumber();
@@ -135,5 +135,6 @@ public class PasswordGUI {
 
     public static void pass() {
         new PasswordGUI();
+        
     }
 }

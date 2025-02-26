@@ -14,7 +14,8 @@ public class AstronautManagementGUI {
         frame.add(panel);
         placeComponents(panel);
         
-        // Display the window
+        // Set the frame location and make it visible
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
     
@@ -70,7 +71,13 @@ public class AstronautManagementGUI {
             // Display the entered details
             JOptionPane.showMessageDialog(panel, "Astronaut Details:\nName: " + name + "\nWeight: " + weight + " lbs");
             
-            // Proceed to spaceship management or other actions here
+            // Close current frame and proceed to LaunchGUI
+            SwingUtilities.windowForComponent(panel).dispose(); // Close the current frame
+            // Ensure LaunchGUI has a static launch method
         });
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(AstronautManagementGUI::Space);
     }
 }

@@ -69,4 +69,8 @@ public class DOBDetector {
             System.out.println("Error proceeding to the next file: " + e.getMessage());
         }
     }
+
+    public static void setVisible(boolean b) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

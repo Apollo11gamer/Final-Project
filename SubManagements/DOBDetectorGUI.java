@@ -1,6 +1,5 @@
 package SubManagements;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,8 +8,10 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
+import javax.swing.*;
 
 public class DOBDetectorGUI {
+    
     public static void DOB() {
         SwingUtilities.invokeLater(DOBDetectorGUI::createAndShowGUI);
     }
@@ -34,7 +35,8 @@ public class DOBDetectorGUI {
                 if (birthDate != null) {
                     int age = calculateAge(birthDate);
                     resultLabel.setText("Valid DOB: " + birthDate + ", Age: " + age);
-                    JOptionPane.showMessageDialog(frame, "Proceeding to Astronaut Manager...");
+                    JOptionPane.showMessageDialog(frame, "Proceeding to Phone Number Verifier...");
+                    PhoneNumberVerifierGUI.phone();
                 } else {
                     resultLabel.setText("Invalid Date of Birth. Try again.");
                 }
@@ -67,4 +69,5 @@ public class DOBDetectorGUI {
     private static int calculateAge(LocalDate birthDate) {
         return Period.between(birthDate, LocalDate.now()).getYears();
     }
+
 }

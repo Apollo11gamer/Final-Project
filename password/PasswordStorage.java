@@ -7,6 +7,8 @@ import javax.crypto.SecretKey;
 
 public class PasswordStorage {
     private static final String FILE_PATH = "users_encrypted.txt"; // Encrypted file path
+    private static final String FILE_NAME = "passwords.txt";
+    private static Map<String, String> passwordMap = new HashMap<>();
     private static final Map<String, User> userDatabase = new HashMap<>();
     private static SecretKey secretKey;
 
@@ -82,4 +84,29 @@ public class PasswordStorage {
             this.serialNumber = serialNumber;
         }
     }
+
+    public static Map<String, User> getAllUsers() {
+        return new HashMap<>(userDatabase);
+    }
+
+        // Remove a user from storage
+public static boolean removePassword(String username) throws IOException {
+    if (userDatabase.containsKey(username)) {
+        userDatabase.remove(username);
+        saveAllPasswords(); // Update file
+        return true;
+    }
+    return false;
+}
+
+// Save all passwords back to file after removal
+private static void saveAllPasswords() throws IOException {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
+        for (Map.Entry<String, String> entry : passwordMap.entrySet()) {
+            writer.write(entry.getKey() + ":" + entry.getValue());
+            writer.newLine();
+        }
+    }
+    
+}
 }

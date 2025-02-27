@@ -1,3 +1,4 @@
+package LaunchControl;
 
 
 
@@ -41,12 +42,12 @@ public class Rentry {
     // Main method for testing
     public static void main(String[] args) {
         Rentry player = new Rentry();
-        player.play("Music\\Spaceflight Simulator - Cosmic Ocean (Official Soundtrack).wav"); // Change to a valid file path
+        player.play("Music/Spaceflight Simulator - Tiny Planet (Official Soundtrack).wav"); // Change to a valid file path
     }
 
     public void sound() {
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource("Music/Spaceflight Simulator - Cosmic Ocean (Official Soundtrack).wav")
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource("Music/Spaceflight Simulator - Tiny Planet (Official Soundtrack).wav")
             );
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);

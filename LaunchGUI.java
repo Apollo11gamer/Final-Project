@@ -1,3 +1,4 @@
+package LaunchControl;
 import java.awt.*;
 import javax.swing.*;
 
@@ -156,29 +157,43 @@ public class LaunchGUI {
         statusLabel.setText("Rocket is descending...");
         Rentry reentrySound = new Rentry();
         reentrySound.play("Music/Spaceflight Simulator - Tiny Planet (Official Soundtrack).wav");
-
+    
         while (currentAltitude > 0) {
-            currentSpeed -= GRAVITY * TIME_STEP;
+            currentSpeed += 9.81 * TIME_STEP; // Gravity pulls downward
             currentAltitude -= currentSpeed * TIME_STEP;
-
-            // Deploy parachutes only once
+    
+            // Prevent negative altitude
+            if (currentAltitude < 0) {
+                currentAltitude = 0;
+                currentSpeed = 0;
+                break;
+            }
+    
+            // Deploy parachutes if below 5000m
             if (!parachutesDeployed && currentAltitude <= 5000) {
                 parachutesDeployed = true;
+                currentSpeed *= 0.2; // Slow down significantly
                 reentrySound.play("SubManagements/Parachutes.mp3");
             }
-
+    
+            // Apply terminal velocity limit
+            if (parachutesDeployed && currentSpeed > 50) {
+                currentSpeed = 50;
+            }
+    
             SwingUtilities.invokeLater(() -> {
                 fuelLabel.setText("Fuel: " + String.format("%.2f", currentFuel) + " kg");
                 speedLabel.setText("Speed: " + String.format("%.2f", currentSpeed) + " m/s");
                 altitudeLabel.setText("Altitude: " + String.format("%.2f", currentAltitude) + " m");
             });
-
+    
             sleep(500);
         }
-
+    
         reentrySound.stop();
         SwingUtilities.invokeLater(() -> statusLabel.setText("Touchdown! Mission Success."));
     }
+    
 
     private void sleep(int ms) {
         try {

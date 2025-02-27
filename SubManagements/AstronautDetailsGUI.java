@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 import javax.swing.*;
+import LaunchControl.LaunchGUI; 
 
 
 public class AstronautDetailsGUI {
@@ -69,7 +70,15 @@ public class AstronautDetailsGUI {
                             .append("Pay Rate: $").append(payRateFields[i].getText()).append("/hr\n");
                 }
                 JOptionPane.showMessageDialog(frame, astronautData.toString(), "Astronaut Details", JOptionPane.INFORMATION_MESSAGE);
-                
+            }
+        });
+
+        // Button to Proceed
+        JButton nextButton = new JButton("Next");
+        nextButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                proceedToNextFile();
             }
         });
 
@@ -80,8 +89,17 @@ public class AstronautDetailsGUI {
         frame.setLayout(new BorderLayout());
         frame.add(scrollPane, BorderLayout.CENTER);
         frame.add(submitButton, BorderLayout.SOUTH);
+        frame.add(nextButton, BorderLayout.NORTH); // ✅ Correctly added
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    private void proceedToNextFile() {
+        int confirm = JOptionPane.showConfirmDialog(frame, "Do you want to proceed to the launch panel?", "Confirmation", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            frame.dispose(); // Close current window
+            SwingUtilities.invokeLater(() -> new LaunchGUI()); // ✅ Open the LaunchGUI
+        }
     }
 }

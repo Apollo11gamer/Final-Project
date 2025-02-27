@@ -2,6 +2,10 @@ package SubManagements;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import password.Password;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -206,6 +210,7 @@ public class SpaceAstroMenu {
         newWeight = kbd.nextDouble();
         return newWeight;
     }
+    
 
     public static String updateAstronautInfo(String oldName, String newName, Double newWeight) {
      String updatedAstronaut = "";

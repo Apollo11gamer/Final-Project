@@ -1,12 +1,11 @@
 package SubManagements;
 
+import LaunchControl.LaunchGUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 import javax.swing.*;
-import LaunchControl.LaunchGUI; 
-
 
 public class AstronautDetailsGUI {
 
@@ -15,6 +14,7 @@ public class AstronautDetailsGUI {
     private int[] serialNumbers;
     private int astronautCount;
     private Random random;
+    private JButton nextButton;  // Declare the Next button here
 
     public AstronautDetailsGUI(int count) {
         this.astronautCount = count;
@@ -73,14 +73,23 @@ public class AstronautDetailsGUI {
             }
         });
 
-        // Button to Proceed
-        JButton nextButton = new JButton("Next");
+        // Button to Proceed (initially hidden)
+        nextButton = new JButton("Launch!!!");
+        nextButton.setEnabled(false);  // Disable initially
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 proceedToNextFile();
             }
         });
+
+        // Add DocumentListener to each field to track user input
+        for (int i = 0; i < astronautCount; i++) {
+            nameFields[i].getDocument().addDocumentListener(new InputChangeListener());
+            kinFields[i].getDocument().addDocumentListener(new InputChangeListener());
+            weightFields[i].getDocument().addDocumentListener(new InputChangeListener());
+            payRateFields[i].getDocument().addDocumentListener(new InputChangeListener());
+        }
 
         // Scroll Pane
         JScrollPane scrollPane = new JScrollPane(panel);
@@ -101,5 +110,42 @@ public class AstronautDetailsGUI {
             frame.dispose(); // Close current window
             SwingUtilities.invokeLater(() -> new LaunchGUI()); // ✅ Open the LaunchGUI
         }
+    }
+
+    // This listener will enable/disable the Next button based on input validation
+    private class InputChangeListener implements javax.swing.event.DocumentListener {
+        @Override
+        public void insertUpdate(javax.swing.event.DocumentEvent e) {
+            validateInput();
+        }
+
+        @Override
+        public void removeUpdate(javax.swing.event.DocumentEvent e) {
+            validateInput();
+        }
+
+        @Override
+        public void changedUpdate(javax.swing.event.DocumentEvent e) {
+            validateInput();
+        }
+
+        private void validateInput() {
+            boolean allFieldsValid = true;
+
+            // Check all astronaut input fields
+            for (int i = 0; i < astronautCount; i++) {
+                if (nameFields[i].getText().isEmpty() || kinFields[i].getText().isEmpty() ||
+                    weightFields[i].getText().isEmpty() || payRateFields[i].getText().isEmpty()) {
+                    allFieldsValid = false;
+                    break;
+                }
+            }
+
+            // Enable the "Next" button if all fields are filled
+            nextButton.setEnabled(allFieldsValid);
+        }
+    }
+
+    public static void main(String[] args) {
     }
 }

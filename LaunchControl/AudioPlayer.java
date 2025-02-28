@@ -8,7 +8,7 @@ public class AudioPlayer {
     public void sound() {
         try {
             // Load your audio file
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource("Music/Spaceflight Simulator - Cosmic Ocean (Official Soundtrack).wav"));
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource("Music copy/Spaceflight Simulator - Deep Space (Official Soundtrack).wav"));
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.loop(Clip.LOOP_CONTINUOUSLY); //Loop audio

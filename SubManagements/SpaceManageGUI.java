@@ -1,9 +1,11 @@
 package SubManagements;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class SpaceManageGUI {
     
@@ -28,6 +30,7 @@ public class SpaceManageGUI {
         // Button Panel
         JPanel buttonPanel = new JPanel();
         nextButton = new JButton("Next");
+        nextButton.setEnabled(true);  // Disable the Next button initially
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -46,6 +49,33 @@ public class SpaceManageGUI {
         });
         buttonPanel.add(nextButton);
         frame.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Document listener to enable Next button when a valid number is entered
+        astronautCountField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                enableNextButton();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                enableNextButton();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                enableNextButton();
+            }
+
+            private void enableNextButton() {
+                try {
+                    int count = Integer.parseInt(astronautCountField.getText());
+                    nextButton.setEnabled(count > 0); // Enable if positive integer
+                } catch (NumberFormatException e) {
+                    nextButton.setEnabled(false); // Disable if not a valid integer
+                }
+            }
+        });
 
         // Center and display
         frame.setLocationRelativeTo(null);

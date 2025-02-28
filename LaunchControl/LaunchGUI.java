@@ -1,19 +1,23 @@
-package LaunchControl;
+package LaunchControl; 
+import java.awt.*;
+import javax.swing.*;
+
 
 import java.awt.*;
 import javax.swing.*;
 
 public class LaunchGUI {
-    private static final double SPACEWALK_ALTITUDE = 70000;
-    private static final double THRUST = 5386220;
-    private static final double ROCKET_MASS = 3;
-    private static final double GRAVITY = 9.81;
+    private static final double SPACEWALK_ALTITUDE = 400000;
+    private static final double THRUST = 7600000;
+    private static final double ROCKET_MASS = 549054;
+    private static final double GRAVITY = 0;
     private static final double FUEL_BURN_RATE = 3000;
     private static final double TIME_STEP = 1; // Simulation time step in seconds
 
     private double currentFuel = 500000;
     private double currentSpeed = 0;
     private double currentAltitude = 0;
+    private boolean stageOneActive = true;
     private boolean parachutesDeployed = false;
 
     private final JFrame frame;
@@ -66,50 +70,63 @@ public class LaunchGUI {
             @Override
             protected Void doInBackground() throws Exception {
                 preLaunchSequence();
+    
                 publish(new String[]{"Liftoff! Rocket is ascending...", "", "", ""});
-
-                // Play launch sound in a separate thread
+    
+                // Start the sound here
                 AudioPlayer launchSound = new AudioPlayer();
-                new Thread(launchSound::sound).start();
-
-                while (currentFuel > 0 || currentSpeed > 0) { 
+                launchSound.sound(); // This should not block the launch sequence
+    
+                while (currentFuel > 0) {
                     double totalMass = ROCKET_MASS + currentFuel;
-                    double weight = totalMass * GRAVITY;
-                    double netForce = THRUST - weight;  
-                    double acceleration = netForce / totalMass; 
-                
-                    if (acceleration <= 0 && currentSpeed <= 0) {
-                        publish(new String[]{"Thrust Insufficient! Aborting Launch...", "", "", ""});
-                        return null;
+                    double acceleration = (THRUST / totalMass) - GRAVITY; // Calculate net acceleration
+    
+                    currentSpeed += acceleration * TIME_STEP; // Update speed
+                    if (currentSpeed < 0) {
+                        currentSpeed = 0; // Prevent negative speed
                     }
-                
-                    currentSpeed = Math.max(0, currentSpeed + acceleration * TIME_STEP);
-                    currentAltitude = Math.max(0, currentAltitude + currentSpeed * TIME_STEP);
-                    currentFuel = Math.max(0, currentFuel - FUEL_BURN_RATE * TIME_STEP);
-                
-                    if (currentAltitude >= SPACEWALK_ALTITUDE) {
-                        publish(new String[]{"Altitude reached " + SPACEWALK_ALTITUDE + " m. Preparing for spacewalk...", "", "", ""});
-                        
-                        launchSound.stop(); // 🛑 Stop the launch sound immediately
-                
-                        performSpacewalk();
-                        break;
+    
+                    currentAltitude += currentSpeed * TIME_STEP; // Update altitude
+                    if (currentAltitude < 0) {
+                        currentAltitude = 0; // Prevent negative altitude
                     }
-                
+    
+                    currentFuel = Math.max(0, currentFuel - FUEL_BURN_RATE * TIME_STEP); // Update fuel
+    
+                    // Check if altitude reached 70000 for spacewalk
+                    if (currentAltitude >= 70000) {
+                        // Stop ascent
+                        currentSpeed = 0; // Reset speed to 0
+                        currentAltitude = 70000; // Ensure altitude is exactly 70000
+                        publish(new String[]{"Altitude reached 70,000 m. Preparing for spacewalk...", "", "", ""});
+                        break; // Exit the loop
+                    }
+    
+                    // Publish updated values for UI
                     publish(new String[]{
-                        "Liftoff! Rocket is ascending...",
+                        "", // No change to countdown label
                         "Fuel: " + String.format("%.2f", currentFuel) + " kg",
                         "Speed: " + String.format("%.2f", currentSpeed) + " m/s",
                         "Altitude: " + String.format("%.2f", currentAltitude) + " m"
                     });
-                
+    
+                    // Sleep for the time step duration
                     Thread.sleep((long) (TIME_STEP * 1000));
                 }
-
-                // Start descent
+    
+                launchSound.stop(); // Stop the sound when done
+    
+                // Indicate the start of the spacewalk
+                publish(new String[]{"Spacewalk in Progress...", "", "", ""});
+    
+                // Simulate 30 seconds of spacewalk
+                Thread.sleep(30000);
+    
+                publish(new String[]{"Re-entry Initiating...", "", "", ""});
                 descend();
                 return null;
             }
+    
             @Override
             protected void process(java.util.List<String[]> chunks) {
                 for (String[] data : chunks) {
@@ -125,35 +142,7 @@ public class LaunchGUI {
         worker.execute();
     }
 
-    private void performSpacewalk() throws InterruptedException {
-        publish(new String[]{"Spacewalk in Progress...", "Time Remaining: 30s", "", ""});
-        
-        // Play spacewalk music in a separate thread
-        MusicPlayer spacewalk = new MusicPlayer();
-        spacewalk.sound("Music copy/Spaceflight Simulator - Cosmic Ocean (Official Soundtrack).wav");
-
-        for (int i = 30; i > 0; i--) {
-            publish(new String[]{"Spacewalk in Progress...", "Time Remaining: " + i + "s", "", ""});
-            Thread.sleep(1000);
-        }
-
-        spacewalk.stop();
-        publish(new String[]{"Re-entry Initiating...", "", "", ""});
-        
-        // Ensure UI updates before descent starts
-        Thread.sleep(2000);
-    }
-
-    private void publish(String[] data) {
-        SwingUtilities.invokeLater(() -> {
-            if (data[0] != null && !data[0].isEmpty()) countdownLabel.setText(data[0]);
-            if (data[1] != null && !data[1].isEmpty()) fuelLabel.setText(data[1]);
-            if (data[2] != null && !data[2].isEmpty()) speedLabel.setText(data[2]);
-            if (data[3] != null && !data[3].isEmpty()) altitudeLabel.setText(data[3]);
-        });
-    }
-
-    private void preLaunchSequence() throws InterruptedException {
+    private final void preLaunchSequence() throws InterruptedException {
         String[] countdownSteps = {
             "T-30: Engine Chilldown", "T-15: Final System Check", "T-10: Ignition Sequence Start"
         };
@@ -162,7 +151,7 @@ public class LaunchGUI {
             Thread.sleep(3000);
         }
         for (int i = 9; i >= 0; i--) {
-            int countdownValue = i;
+            final int countdownValue = i; // Create a final variable to hold the current value of i
             SwingUtilities.invokeLater(() -> countdownLabel.setText("T-" + countdownValue + " seconds..."));
             Thread.sleep(1000);
         }
@@ -173,16 +162,17 @@ public class LaunchGUI {
     
         SwingUtilities.invokeLater(() -> statusLabel.setText("Rocket is descending..."));
         Rentry reentrySound = new Rentry();
-        reentrySound.sound("Music/Spaceflight Simulator - Tiny Planet (Official Soundtrack).wav");
+        reentrySound.play("Music/Spaceflight Simulator - Tiny Planet (Official Soundtrack).wav");
     
         while (currentAltitude > 0) {
             currentSpeed += 9.81 * TIME_STEP; // Gravity pulls downward
             currentAltitude -= currentSpeed * TIME_STEP; // Update altitude
     
             // Deploy parachutes if below 5000m
-            if (!parachutesDeployed && currentAltitude <= 10000) {
+            if (!parachutesDeployed && currentAltitude <= 5000) {
                 parachutesDeployed = true;
                 System.out.println("Parachutes deployed!"); // Debugging
+                reentrySound.play("SubManagements/Parachutes.mp3");
             }
     
             // If parachutes are deployed, progressively slow down the descent
@@ -215,10 +205,12 @@ public class LaunchGUI {
         SwingUtilities.invokeLater(() -> statusLabel.setText("Touchdown! Mission Success."));
     }
     
+    
     private void sleep(int ms) {
         try {
             Thread.sleep(ms);
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
     }
 
     public static void main(String[] args) {

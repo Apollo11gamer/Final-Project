@@ -1,29 +1,31 @@
 package SubManagements;
 import java.util.Scanner;
-
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
 import password.Password;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FileReader;
+import java.util.List;
+import java.util.ArrayList;
 
 public class SpaceAstroMenu {
-    
-    public static final String astronautsFile = "astronautsInfo.txt";
-    SpaceAstroMenu object = new SpaceAstroMenu();
-    public static void main() {
-     
-     MENU();
 
+    public static final String astronautsFile = "astronautsInfo.txt";
+    public static final String spaceshipsFile = "spaceshipsInfo.txt";
+
+    public static void main(String[] args) {
+
+        MENU();
+        
     }
 
+    /**
+     * Displays the main menu and handles user input for the options.
+     */
     public static void MENU() {
 
-     Scanner kbd = new Scanner(System.in);
+        Scanner kbd = new Scanner(System.in);
 
         System.out.println("\nSpaceship and Astronaut Menu");
         System.out.println("\nASTRONAUT OPTIONS");
@@ -40,221 +42,380 @@ public class SpaceAstroMenu {
 
         // Validate integer input
         while (!kbd.hasNextInt()) {
-            System.out.println("\nInvalid input! Please enter a number between 1-4.");
+
+            System.out.println("\nInvalid input! Please enter a number between 1-6.");
             kbd.nextLine(); // Consume invalid input
+
         }
 
-     int choice = kbd.nextInt();
-     kbd.nextLine(); // Consume newline
-        
+        int choice = kbd.nextInt();
+        kbd.nextLine(); // Consume newline
+
         try {
+
         switch (choice) {
+
             case 1 -> createAstronaut();
-            case 2 -> editAstronautsFile(astronautsFile);
+            case 2 -> editAstronautsFile();
             case 3 -> removeAstronaut();
             case 4 -> createSpaceship();
             case 5 -> prepareLaunch();
             case 6 -> Password.pass();
+            default -> System.out.println("Invalid choice.");
+
         }
-        }
+
+        } 
+        
         catch (Exception e) {
+
             System.out.println("\nAn unexpected error occurred: " + e.getMessage());
             e.printStackTrace();
+
         }
 
     }
 
+    /**
+     * Creates a new astronaut by gathering input and saving it to the file.
+     */
     public static void createAstronaut() {
-
-     String name = ""; // String for the name of the astronaut.
-     double weight = 0; // Double for the weight of the astronaut in pounds.
-     Scanner kbd = new Scanner(System.in);
-
-    // Prompts the user to enter a name for the astronaut, then stores the input in name while trimming any whitespace.
-        System.out.println("What is the name of the astronaut?");
-        name = kbd.nextLine().trim();
-    while(name.isEmpty()) {
-        System.out.println("Invalid input! Do not enter an empty space. Enter a name:"); 
-        name = kbd.nextLine().trim();
-    }
-
-    // Prompts the user to enter an amount of pounds the astronaut weighs, then stores the input in weight.
-    // If the amount entered is a double value, it will go through. If it is not, a message will tell the user that the input is invalid.
-        System.out.println("What is the weight (in lbs) of the astronaut?");
-    while(!kbd.hasNextDouble()) {
-        System.out.println("Invalid input! Please enter an integer/decimal number:");
-        kbd.next(); // Consume invalid input    
-    } 
-     weight = kbd.nextDouble();
-     kbd.nextLine(); // Consume the newline character
-
-        System.out.println("Successfully made an astronaut!");
-
-     saveAstronautInfo(name, weight);
-     MENU();
-
-    }
-
-    public static void saveAstronautInfo(String name, double weight) {
-
-        try (BufferedWriter author = new BufferedWriter(new FileWriter(astronautsFile, true))) {
-            author.write(name + ", " + weight);
-            author.newLine();
-            System.out.println("Astronaut data saved.");
-        }
-        catch (IOException e) {
-            System.out.println("Error saving astronaut details." + e.getMessage());
-        }
-
-    }
-
-    public static void editAstronautsFile(String astronautsFile) throws IOException{
 
         Scanner kbd = new Scanner(System.in);
 
-        StringBuilder fileContent = new StringBuilder();
-        String astronautLine = "";
-        int astronautNumber = 1;
+        System.out.println("What is the name of the astronaut?");
+        String name = kbd.nextLine().trim();
 
-        System.out.println("\nHere is the list of astronauts and their details to edit.");
-        try (BufferedReader reader = new BufferedReader(new FileReader(astronautsFile))) {
-            // Read and print each line of the file
-            while ((astronautLine = reader.readLine()) != null) {
-                fileContent.append(astronautLine).append("\n");
-                System.out.println(astronautNumber + ". " + astronautLine);
-                astronautNumber++;
-            }
-        } catch (IOException e) {
-            // Handle exceptions (e.g., file not found or access issues)
-            System.out.println("An error occurred while reading the file: " + e.getMessage());
+        while (name.isEmpty()) {
+
+            System.out.println("Invalid input! Do not enter an empty space. Enter a name:");
+            name = kbd.nextLine().trim();
+
         }
 
-        int editChoice = 0;
+        System.out.println("What is the weight (in lbs) of the astronaut?");
+        double weight;
 
-        System.out.println("Enter the name of the astronaut you want to edit.");
+        while (!kbd.hasNextDouble()) {
+
+            System.out.println("Invalid input! Please enter a valid weight (integer or decimal).");
+            kbd.next(); // Consume invalid input
+
+        }
+
+        weight = kbd.nextDouble();
+
+        saveAstronautInfo(name, weight);
+        System.out.println("Successfully created astronaut!");
+        MENU();
+
+    }
+
+    /**
+     * Saves astronaut information into the file.
+     */
+    public static void saveAstronautInfo(String name, double weight) {
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(astronautsFile, true))) {
+
+            writer.write(name + ", " + weight);
+            writer.newLine();
+            System.out.println("Astronaut data saved.");
+
+        } 
+        
+        catch (IOException e) {
+
+            System.out.println("Error saving astronaut details: " + e.getMessage());
+
+        }
+    }
+
+    /**
+     * Edits an existing astronaut's details.
+     */
+    public static void editAstronautsFile() throws IOException {
+
+        Scanner kbd = new Scanner(System.in);
+
+        System.out.println("\nHere is the list of astronauts to edit.");
+        List<String> astronautList = loadAstronauts();
+        astronautList.forEach(System.out::println);
+
+        System.out.println("Enter the name of the astronaut you want to edit:");
         String astronautChoice = kbd.nextLine().trim();
 
-        // Check if the user exists
         if (!astronautExists(astronautChoice)) {
+
             System.out.println("Astronaut not found!");
-            return; // Exit if the user doesn't exist
-        }
-        else if (astronautExists(astronautChoice)) {
-            System.out.println("Astronaut was found!");
-            System.out.println("What do you want to edit?");
-            System.out.println("1. Name");
-            System.out.println("2. Weight");
-            editChoice = kbd.nextInt();
+
+            return;
         }
 
-        String newName = "";
-        double newWeight = 0;
+        System.out.println("What do you want to edit?");
+        System.out.println("1. Name");
+        System.out.println("2. Weight");
+
+        int editChoice = kbd.nextInt();
+        kbd.nextLine(); // Consume newline
+
         String updatedAstronaut = "";
+        String newName;
+        double newWeight;
 
-            try {
-                switch (editChoice) {
-                case 1 : newName = returnName();
-                updatedAstronaut = updateAstronautInfo(astronautChoice, newName, null);
-                break;
-                case 2 : newWeight = returnWeight();
-                updatedAstronaut = updateAstronautInfo(astronautChoice, null, newWeight);
-                break;
-                default : System.out.println("Invalid choice.");
-                break;
-            }
-            }
-            catch (Exception e) {
-                System.out.println("\nAn unexpected error occurred: " + e.getMessage());
-                e.printStackTrace();
-            }
-            
-             MENU(); // Go back to menu if the astronaut does exist (after astronaut is edited)
-        
+        try {
+
+            switch (editChoice) {
+
+            case 1 : newName = returnName();
+            updatedAstronaut = updateAstronautInfo(astronautChoice, newName, null);
+            saveUpdatedAstronautInfo(updatedAstronaut);
+            break;
+            case 2 : newWeight = returnWeight();
+            updatedAstronaut = updateAstronautInfo(astronautChoice, null, newWeight);
+            saveUpdatedAstronautInfo(updatedAstronaut);
+            break;
+            default : System.out.println("Invalid choice.");
+            break;
+
+        }
+
+        }
+
+        catch (Exception e) {
+
+            System.out.println("\nAn unexpected error occurred: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+
+        System.out.println("Astronaut details updated successfully.");
+        MENU();
+
     }
-
-    public static boolean astronautExists(String astronautChoice) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(astronautsFile))) {
-         String chosenAstronaut;
-        while((chosenAstronaut = reader.readLine()) != null) {
-        // Split the line by ", " to separate the name and weight
-         String[] astronautDetails = chosenAstronaut.split(", ");
-         String astronautName = astronautDetails[0]; // First part is the name
-        if (astronautName.equalsIgnoreCase(astronautChoice)){
-            return true;
-        }
-        }
-        } 
-        catch (IOException e) {
-            System.out.println("Error checking astronaut: " + e.getMessage());
-        }
-            return false; // If astronaut not found
-        }
 
     public static String returnName() {
-     String newName;
-     Scanner kbd = new Scanner(System.in);
-        System.out.print("Enter the new name:");
-        newName = kbd.nextLine();
-        return newName;
+
+    String newName;
+    Scanner kbd = new Scanner(System.in);
+
+       System.out.print("Enter the new name:");
+       newName = kbd.nextLine();
+       return newName;
+
+   }
+
+   public static double returnWeight() {
+
+    double newWeight;
+    Scanner kbd = new Scanner(System.in);
+
+       System.out.print("Enter the new weight:");
+       newWeight = kbd.nextDouble();
+       return newWeight;
+
+   }
+
+
+    /**
+     * Loads astronauts from the file into a list.
+     */
+    public static List<String> loadAstronauts() {
+
+        List<String> astronautList = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(astronautsFile))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+
+                astronautList.add(line);
+
+            }
+        } 
+
+        catch (IOException e) {
+
+            System.out.println("Error reading astronaut details: " + e.getMessage());
+
+        }
+
+        return astronautList;
+
     }
 
-    public static double returnWeight() {
-     double newWeight;
-     Scanner kbd = new Scanner(System.in);
-        System.out.print("Enter the new weight:");
-        newWeight = kbd.nextDouble();
-        return newWeight;
+    /**
+     * Checks if an astronaut exists in the file.
+     */
+    public static boolean astronautExists(String astronautChoice) {
+
+        return loadAstronauts().stream().anyMatch(astronaut -> astronaut.startsWith(astronautChoice));
+
     }
-    
 
     public static String updateAstronautInfo(String oldName, String newName, Double newWeight) {
-     String updatedAstronaut = "";
 
-    try (BufferedReader reader = new BufferedReader(new FileReader(astronautsFile))) {
-     String line;
-    while ((line = reader.readLine()) != null) {
-    String[] astronautDetails = line.split(", ");
-    String currentName = astronautDetails[0];
-    double currentWeight = Double.parseDouble(astronautDetails[1]);
-    if (currentName.equalsIgnoreCase(oldName)) {
-        if (newName != null) {
-            currentName = newName;
+        String updatedAstronaut = "";
+    
+        try (BufferedReader reader = new BufferedReader(new FileReader(astronautsFile))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+
+                String[] astronautDetails = line.split(", ");
+                String currentName = astronautDetails[0];  // Extract the current name
+                double currentWeight = Double.parseDouble(astronautDetails[1]);  // Extract the current weight
+                
+                // Check if the current astronaut matches the one to be updated
+                if (currentName.equalsIgnoreCase(oldName)) {
+                    // Update the name if newName is not null
+                    if (newName != null) {
+                        currentName = newName;
+                    }
+                    // Update the weight if newWeight is not null
+                    if (newWeight != null) {
+                        currentWeight = newWeight;
+                    }
+                    
+                    // Construct the updated astronaut string with the new name and/or weight
+                    updatedAstronaut = currentName + ", " + currentWeight;
+                    break;  // We found and updated the astronaut, so break out of the loop
+                }
+
+            }
+
+        } catch (IOException e) {
+
+            System.out.println("Error updating astronaut info: " + e.getMessage());
+
         }
-        if (newWeight != null) {
-            currentWeight = newWeight;
-        }
-        updatedAstronaut = currentName + ", " + currentWeight;
-        break;
+    
+        return updatedAstronaut;
     }
-    }
-    }
-    catch (IOException e) {
-        System.out.println("Error message: " + e.getMessage());
-    }
-    return updatedAstronaut;
-    }
+    
+    /**
+     * Saves the updated astronaut details into the file.
+     */
+    public static void saveUpdatedAstronautInfo(String updatedAstronaut) {
+
+        List<String> astronautList = loadAstronauts();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(astronautsFile))) {
+
+            for (String astronaut : astronautList) {
+
+                if (astronaut.startsWith(updatedAstronaut.split(",")[0])) {
+
+                    writer.write(updatedAstronaut);
+
+                } 
+                
+                else {
+
+                    writer.write(astronaut);
+
+                }
+
+                writer.newLine();
+            }
+
+        } 
         
-    public static void saveUpdatedAstronautInfo(StringBuilder fileContent, String updatedAstronaut) {
-    try(BufferedWriter author = new BufferedWriter(new FileWriter(astronautsFile, true))) {
-    String updatedFileContent = fileContent.toString().replaceFirst("(?m)^" + updatedAstronaut.split(", ")[0] + ", .+", updatedAstronaut);
-    author.write(updatedFileContent);
-    System.out.println("Astronaut details updated successfully.");
-    }
-    catch (IOException e) {
-        System.out.println("Error saving updated astronaut details: " + e.getMessage());
-    }
-    }
+        catch (IOException e) {
 
-    public static void removeAstronaut() {
+            System.out.println("Error updating astronaut details: " + e.getMessage());
+
+        }
 
     }
 
+    /**
+     * Removes an astronaut from the file.
+     */
+    public static void removeAstronaut() throws IOException {
+
+        Scanner kbd = new Scanner(System.in);
+        System.out.println("Enter the name of the astronaut to remove:");
+        String astronautChoice = kbd.nextLine().trim();
+
+        if (!astronautExists(astronautChoice)) {
+
+            System.out.println("Astronaut not found!");
+            return;
+
+        }
+
+        List<String> astronautList = loadAstronauts();
+        astronautList.removeIf(astronaut -> astronaut.startsWith(astronautChoice));
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(astronautsFile))) {
+
+            for (String astronaut : astronautList) {
+
+                writer.write(astronaut);
+                writer.newLine();
+
+            }
+
+            System.out.println("Astronaut removed successfully.");
+
+        } 
+        
+        catch (IOException e) {
+        
+            System.out.println("Error removing astronaut: " + e.getMessage());
+
+        }
+
+        MENU();
+    }
+
+    /**
+     * Creates a new spaceship by gathering input and saving it to the file.
+     */
     public static void createSpaceship() {
 
+        Scanner kbd = new Scanner(System.in);
+
+        System.out.println("What is the name of the spaceship?");
+        String spaceshipName = kbd.nextLine().trim();
+
+        System.out.println("How many pounds of fuel can be loaded into the spaceship?");
+        double spaceshipFuelCapacity = kbd.nextDouble();
+
+        System.out.println("How many crew members can be loaded into the spaceship?");
+        int spaceshipCrewCapacity = kbd.nextInt();
+
+        saveSpaceshipInfo(spaceshipName, spaceshipFuelCapacity, spaceshipCrewCapacity);
+        System.out.println("Successfully created spaceship!");
+        MENU();
+
     }
 
+    /**
+     * Saves spaceship information into the file.
+     */
+    public static void saveSpaceshipInfo(String spaceshipName, double spaceshipFuelCapacity, int spaceshipCrewCapacity) {
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(spaceshipsFile, true))) {
+
+            writer.write(spaceshipName + ", " + spaceshipFuelCapacity + ", " + spaceshipCrewCapacity);
+            writer.newLine();
+            System.out.println("Spaceship data saved.");
+
+        } 
+        
+        catch (IOException e) {
+
+            System.out.println("Error saving spaceship details: " + e.getMessage());
+
+        }
+    }
+
+    /**
+     * Prepares a spaceship for launch (fuel and astronauts).
+     */
     public static void prepareLaunch() {
-
+        // Implementation for preparing spaceship for launch
     }
-
-    }
+}

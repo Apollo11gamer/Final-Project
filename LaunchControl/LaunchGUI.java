@@ -158,33 +158,54 @@ public class LaunchGUI {
     }
 
     private void descend() {
-        statusLabel.setText("Rocket is descending...");
+        System.out.println("Descending initiated..."); // Debugging
+    
+        SwingUtilities.invokeLater(() -> statusLabel.setText("Rocket is descending..."));
         Rentry reentrySound = new Rentry();
         reentrySound.play("Music/Spaceflight Simulator - Tiny Planet (Official Soundtrack).wav");
-
+    
         while (currentAltitude > 0) {
-            currentSpeed -= GRAVITY * TIME_STEP;
-            currentAltitude -= currentSpeed * TIME_STEP;
-
-            // Deploy parachutes only once
+            currentSpeed += 9.81 * TIME_STEP; // Gravity pulls downward
+            currentAltitude -= currentSpeed * TIME_STEP; // Update altitude
+    
+            // Deploy parachutes if below 5000m
             if (!parachutesDeployed && currentAltitude <= 5000) {
                 parachutesDeployed = true;
+                System.out.println("Parachutes deployed!"); // Debugging
                 reentrySound.play("SubManagements/Parachutes.mp3");
             }
-
+    
+            // If parachutes are deployed, progressively slow down the descent
+            if (parachutesDeployed) {
+                currentSpeed *= 0.95; // Gradual deceleration
+                if (currentSpeed < 5) {
+                    currentSpeed = 5; // Set a low terminal velocity
+                }
+            }
+    
+            // Ensure that when altitude reaches zero, speed is also zero
+            if (currentAltitude <= 10) { 
+                currentSpeed *= 0.9; // Further slow down as it nears the ground
+                if (currentAltitude <= 1) { // Final touch-down phase
+                    currentSpeed = 0;
+                    currentAltitude = 0;
+                }
+            }
+    
             SwingUtilities.invokeLater(() -> {
                 fuelLabel.setText("Fuel: " + String.format("%.2f", currentFuel) + " kg");
                 speedLabel.setText("Speed: " + String.format("%.2f", currentSpeed) + " m/s");
                 altitudeLabel.setText("Altitude: " + String.format("%.2f", currentAltitude) + " m");
             });
-
+    
             sleep(500);
         }
-
+    
         reentrySound.stop();
         SwingUtilities.invokeLater(() -> statusLabel.setText("Touchdown! Mission Success."));
     }
-
+    
+    
     private void sleep(int ms) {
         try {
             Thread.sleep(ms);

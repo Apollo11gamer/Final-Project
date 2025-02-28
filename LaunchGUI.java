@@ -40,7 +40,7 @@ public class LaunchGUI {
         altitudeLabel = new JLabel("Altitude: " + currentAltitude + " m");
 
         launchButton = new JButton("Launch");
-        launchButton.addActionListener(_ -> initiateLaunch());
+        launchButton.addActionListener(e -> initiateLaunch());
 
         Color textColor = Color.GREEN;
         for (JLabel label : new JLabel[]{countdownLabel, statusLabel, fuelLabel, speedLabel, altitudeLabel}) {

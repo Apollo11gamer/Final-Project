@@ -13,6 +13,7 @@ public class SpaceAstroMenu {
 
     public static final String astronautsFile = "astronautsInfo.txt";
     public static final String spaceshipsFile = "spaceshipsInfo.txt";
+    public static final String spaceshipsLaunchPreparation = "spaceshipsContain.txt";
 
     public static void main(String[] args) {
 
@@ -137,9 +138,17 @@ public class SpaceAstroMenu {
     public static void editAstronautsFile() throws IOException {
 
         Scanner kbd = new Scanner(System.in);
+        List<String> astronautList = loadAstronauts();
+
+        if (astronautList.isEmpty()) {
+
+            System.out.println("No astronauts to edit.");
+            return;
+
+        }
 
         System.out.println("\nHere is the list of astronauts to edit.");
-        List<String> astronautList = loadAstronauts();
+        
         astronautList.forEach(System.out::println);
 
         System.out.println("Enter the name of the astronaut you want to edit:");
@@ -175,7 +184,7 @@ public class SpaceAstroMenu {
             updatedAstronaut = updateAstronautInfo(astronautChoice, null, newWeight);
             saveUpdatedAstronautInfo(updatedAstronaut);
             break;
-            default : System.out.println("Invalid choice.");
+            default : System.out.println("\nInvalid choice.");
             break;
 
         }
@@ -184,12 +193,12 @@ public class SpaceAstroMenu {
 
         catch (Exception e) {
 
-            System.out.println("\nAn unexpected error occurred: " + e.getMessage());
+            System.out.println("An unexpected error occurred: " + e.getMessage());
             e.printStackTrace();
 
         }
 
-        System.out.println("Astronaut details updated successfully.");
+        System.out.println("\nAstronaut details updated successfully.");
         MENU();
 
     }
@@ -227,11 +236,13 @@ public class SpaceAstroMenu {
         try (BufferedReader reader = new BufferedReader(new FileReader(astronautsFile))) {
 
             String line;
+
             while ((line = reader.readLine()) != null) {
 
                 astronautList.add(line);
 
             }
+            
         } 
 
         catch (IOException e) {
@@ -340,7 +351,7 @@ public class SpaceAstroMenu {
 
         if (!astronautExists(astronautChoice)) {
 
-            System.out.println("Astronaut not found!");
+            System.out.println("\nAstronaut not found!");
             return;
 
         }
@@ -357,7 +368,7 @@ public class SpaceAstroMenu {
 
             }
 
-            System.out.println("Astronaut removed successfully.");
+            System.out.println("\nAstronaut removed successfully.");
 
         } 
         
@@ -387,7 +398,7 @@ public class SpaceAstroMenu {
         int spaceshipCrewCapacity = kbd.nextInt();
 
         saveSpaceshipInfo(spaceshipName, spaceshipFuelCapacity, spaceshipCrewCapacity);
-        System.out.println("Successfully created spaceship!");
+        System.out.println("\nSuccessfully created spaceship!");
         MENU();
 
     }
@@ -412,10 +423,96 @@ public class SpaceAstroMenu {
         }
     }
 
-    /**
-     * Prepares a spaceship for launch (fuel and astronauts).
-     */
+    // Prepares a spaceship for launch (fuel and astronauts).
+    
     public static void prepareLaunch() {
-        // Implementation for preparing spaceship for launch
+
+        
+        Scanner kbd = new Scanner(System.in);
+
+        System.out.println("\nHere is the list of astronauts to edit.");
+        List<String> spaceshipList = loadSpaceships();
+        spaceshipList.forEach(System.out::println);
+
+        System.out.println("Enter the name of the spaceship you want to load with fuel and crew members:");
+        String spaceshipChoice = kbd.nextLine().trim();
+
+        if (!spaceshipExists(spaceshipChoice)) {
+
+            System.out.println("\nSpaceship not found!");
+
+            return;
+        }
+
+        System.out.println("\nSpaceship was found!");
+        System.out.println("How many pounds of fuel do you want to load into the spaceship?");
+        double currentFuel = kbd.nextDouble();
+
+        while(currentFuel != kbd.nextDouble()) {
+
+            System.out.println("Invalid fuel amount! Enter an integer/decimal.");
+            kbd.next();
+            currentFuel = kbd.nextDouble();
+            break;
+
+        }
+
+        kbd.nextLine();
+        System.out.println("What crew members do you want to board the spaceship? (List the members and separate with commas)");
+        String crewList = kbd.nextLine();
+        String[] currentCrew = crewList.split(", ");
+
+        saveSpaceshipLoadInfo(spaceshipChoice, currentFuel, currentCrew);
+
+
     }
+
+    public static void saveSpaceshipLoadInfo(String spaceshipName, double spaceshipFuel, String[] spaceshipCrew) {
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(spaceshipsLaunchPreparation, true))) {
+
+            String crewString = String.join(", ", spaceshipCrew);
+            writer.write(spaceshipName + ", " + spaceshipFuel+ ", " + crewString);
+            writer.newLine();
+            System.out.println("Spaceship loading data saved.");
+
+        } 
+        
+        catch (IOException e) {
+
+            System.out.println("Error saving spaceship details: " + e.getMessage());
+
+        }
+    }
+
+    public static List<String> loadSpaceships() {
+
+        List<String> spaceshipList = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(spaceshipsFile))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+
+                spaceshipList.add(line);
+
+            }
+        } 
+
+        catch (IOException e) {
+
+        System.out.println("An error occurred: " + e.getMessage());
+
+        }
+
+        return spaceshipList;
+
+    }
+
+    public static boolean spaceshipExists(String spaceshipChoice) {
+
+        return loadSpaceships().stream().anyMatch(spaceship -> spaceship.startsWith(spaceshipChoice));
+
+    }
+
 }

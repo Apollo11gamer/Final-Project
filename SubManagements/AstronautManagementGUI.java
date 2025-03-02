@@ -48,7 +48,7 @@ public class AstronautManagementGUI {
         panel.add(submitButton);
         
         // Action listener to process input
-        submitButton.addActionListener(_ -> {
+        submitButton.addActionListener(o_ -> {
             String name = nameText.getText().trim();
             String weightStr = weightText.getText().trim();
             

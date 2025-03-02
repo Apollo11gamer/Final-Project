@@ -46,7 +46,7 @@ public class LaunchGUI {
         launchButton.setPreferredSize(new Dimension(0, 50));
         launchButton.setForeground(Color.GREEN);
         launchButton.setBackground(Color.DARK_GRAY);
-        launchButton.addActionListener(_ -> initiateLaunch());
+        launchButton.addActionListener(o -> initiateLaunch());
         
         explodeButton = new JButton("Explode Rocket");
         explodeButton.setPreferredSize(new Dimension(0, 50));

@@ -165,10 +165,10 @@ public class AdminGUI {
         JButton editButton = createStyledButton("Edit Astronaut");
         JButton changePasswordButton = createStyledButton("Change Password");
 
-        addButton.addActionListener(_ -> addAstronaut());
-        removeButton.addActionListener(_ -> removeAstronaut());
-        editButton.addActionListener(_ -> editAstronaut());
-        changePasswordButton.addActionListener(_ -> changePassword());
+        addButton.addActionListener(o -> addAstronaut());
+        removeButton.addActionListener(o -> removeAstronaut());
+        editButton.addActionListener(o -> editAstronaut());
+        changePasswordButton.addActionListener(o -> changePassword());
 
         controlPanel.add(new JLabel("Name:"));
         controlPanel.add(nameField);

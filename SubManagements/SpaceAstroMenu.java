@@ -1,13 +1,13 @@
 package SubManagements;
-import java.util.Scanner;
-import password.Password;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.FileReader;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import password.Password;
 
 public class SpaceAstroMenu {
 
@@ -25,53 +25,53 @@ public class SpaceAstroMenu {
      */
     public static void MENU() {
 
-        Scanner kbd = new Scanner(System.in);
+        try (Scanner kbd = new Scanner(System.in)) {
+            System.out.println("\nSpaceship and Astronaut Menu");
+            System.out.println("\nASTRONAUT OPTIONS");
+            System.out.println("1. Create astronauts");
+            System.out.println("2. Edit astronauts");
+            System.out.println("3. Remove astronauts");
+            System.out.println("\nSPACESHIP OPTIONS");
+            System.out.println("4. Create spaceships");
+            System.out.println("5. Prepare spaceships");
+            System.out.println("\nEXIT MENU");
+            System.out.println("6. Exit");
 
-        System.out.println("\nSpaceship and Astronaut Menu");
-        System.out.println("\nASTRONAUT OPTIONS");
-        System.out.println("1. Create astronauts");
-        System.out.println("2. Edit astronauts");
-        System.out.println("3. Remove astronauts");
-        System.out.println("\nSPACESHIP OPTIONS");
-        System.out.println("4. Create spaceships");
-        System.out.println("5. Prepare spaceships");
-        System.out.println("\nEXIT MENU");
-        System.out.println("6. Exit");
+            System.out.print("\nEnter choice: ");
 
-        System.out.print("\nEnter choice: ");
+            // Validate integer input
+            while (!kbd.hasNextInt()) {
 
-        // Validate integer input
-        while (!kbd.hasNextInt()) {
+                System.out.println("\nInvalid input! Please enter a number between 1-6.");
+                kbd.nextLine(); // Consume invalid input
 
-            System.out.println("\nInvalid input! Please enter a number between 1-6.");
-            kbd.nextLine(); // Consume invalid input
+            }
 
-        }
+            int choice = kbd.nextInt();
+            kbd.nextLine(); // Consume newline
 
-        int choice = kbd.nextInt();
-        kbd.nextLine(); // Consume newline
+            try {
 
-        try {
+            switch (choice) {
 
-        switch (choice) {
+                case 1 -> createAstronaut();
+                case 2 -> editAstronautsFile();
+                case 3 -> removeAstronaut();
+                case 4 -> createSpaceship();
+                case 5 -> prepareLaunch();
+                case 6 -> Password.pass();
+                default -> System.out.println("Invalid choice.");
 
-            case 1 -> createAstronaut();
-            case 2 -> editAstronautsFile();
-            case 3 -> removeAstronaut();
-            case 4 -> createSpaceship();
-            case 5 -> prepareLaunch();
-            case 6 -> Password.pass();
-            default -> System.out.println("Invalid choice.");
+            }
 
-        }
+            } 
+            
+            catch (Exception e) {
 
-        } 
-        
-        catch (Exception e) {
+                System.out.println("\nAn unexpected error occurred: " + e.getMessage());
+                e.printStackTrace();
 
-            System.out.println("\nAn unexpected error occurred: " + e.getMessage());
-            e.printStackTrace();
-
+            }
         }
 
     }
@@ -417,5 +417,13 @@ public class SpaceAstroMenu {
      */
     public static void prepareLaunch() {
         // Implementation for preparing spaceship for launch
+    }
+
+    public static String getAstronautsFile() {
+        return astronautsFile;
+    }
+
+    public static String getSpaceshipsFile() {
+        return spaceshipsFile;
     }
 }

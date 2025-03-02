@@ -1,12 +1,13 @@
 package password;
 
 
+import java.io.*;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.*;
-import java.util.Base64;
 
 public class EncryptionUtil {
     private static final String KEY_FILE = "secret.key";
@@ -31,8 +32,7 @@ public class EncryptionUtil {
                     fos.write(secretKey.getEncoded());
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException | NoSuchAlgorithmException e) {
         }
     }
 

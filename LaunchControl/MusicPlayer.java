@@ -1,5 +1,6 @@
 package LaunchControl;
 
+import java.io.IOException;
 import javax.sound.sampled.*;
 
 public class MusicPlayer {
@@ -7,9 +8,7 @@ public class MusicPlayer {
 
     public void sound(String musicSpaceflight_Simulator__Tiny_Planet_O) {
         try {
-            System.out.println("Attempting to play music...");
             if (clip != null && clip.isRunning()) {
-                System.out.println("Stopping existing clip...");
                 clip.stop();
                 clip.close();
             }
@@ -18,9 +17,7 @@ public class MusicPlayer {
             clip.open(audioInputStream);
             clip.loop(Clip.LOOP_CONTINUOUSLY);
             clip.start();
-            System.out.println("Music should be playing now...");
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e) {
         }
     }
     

@@ -1,9 +1,8 @@
 package password;
 
-import javax.swing.*;
+import SubManagements.EmailVerifier;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -11,14 +10,14 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
-import SubManagements.EmailVerifier;
+import javax.swing.*;
 
 public class PasswordGUI {
     private static final String LOG_FILE = "login_attempts_log.txt";
     private JFrame frame;
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private JTextArea outputArea;
+    private final JTextField usernameField;
+    private final JPasswordField passwordField;
+    private final JTextArea outputArea;
 
     public PasswordGUI() {
         frame = new JFrame("Password Manager");
@@ -35,18 +34,12 @@ public class PasswordGUI {
         outputArea = new JTextArea(5, 30);
         outputArea.setEditable(false);
 
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                login();
-            }
+        loginButton.addActionListener((@SuppressWarnings("unused") ActionEvent e) -> {
+            login();
         });
 
-        exitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose(); // Close the Password GUI when exiting
-            }
+        exitButton.addActionListener((@SuppressWarnings("unused") ActionEvent e) -> {
+            frame.dispose(); // Close the Password GUI when exiting
         });
 
         frame.add(userLabel);
@@ -134,7 +127,5 @@ public class PasswordGUI {
     }
 
     public static void pass() {
-        new PasswordGUI();
-        
     }
 }

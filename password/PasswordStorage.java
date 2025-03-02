@@ -72,6 +72,10 @@ public class PasswordStorage {
         }
     }
 
+    public static Map<String, String> getPasswordMap() {
+        return passwordMap;
+    }
+
     // User class to store username, password, and serial number
     static class User {
         String username;

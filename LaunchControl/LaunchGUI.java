@@ -107,7 +107,7 @@ public class LaunchGUI {
         new Thread(() -> {
             try {
                 // Random chance for launch failure (30% chance)
-                if (Math.random() < 0.3) {
+                if (Math.random() < 0.9) {
                     updateStatus("Launch aborted due to technical failure!");
                     boom.sound("LaunchControl/Music copy/Fart with reverb sound effect.wav");
                     Launch.stop();
@@ -375,24 +375,22 @@ public void explodeRocket() {
         g2d.setFont(font);
         g2d.setColor(Color.WHITE);
         
-        int textWidth = g2d.getFontMetrics(font).stringWidth(message);
-        targetTextX = getWidth() / 2 - textWidth / 2; // Center the text
-
+        // Draw the sliding text at the current position
         g2d.drawString(message, textX, getHeight() / 2);
     }
 
     public void startSlidingTextAnimation() {
         // Ensure this method is invoked on the Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
-            textX = -200; // Start the text off-screen
+            textX = getWidth(); // Start the text off-screen to the right
 
             Timer slideTimer = new Timer(30, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (textX < targetTextX) {
-                        textX += 5; // Move text to the center
-                        if (textX >= targetTextX) {
-                            textX = targetTextX; // Stop exactly at center
+                    if (textX > targetTextX) {
+                        textX -= 5; // Move text to the left
+                        if (textX <= targetTextX) {
+                            textX = targetTextX; // Stop exactly off-screen left
                             ((Timer) e.getSource()).stop();
 
                             // Hide text after 5.5 seconds

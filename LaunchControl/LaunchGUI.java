@@ -107,7 +107,7 @@ public class LaunchGUI {
         new Thread(() -> {
             try {
                 // Random chance for launch failure (30% chance)
-                if (Math.random() < 0.9) {
+                if (Math.random() < 0.3) {
                     updateStatus("Launch aborted due to technical failure!");
                     boom.sound("LaunchControl/Music copy/Fart with reverb sound effect.wav");
                     Launch.stop();

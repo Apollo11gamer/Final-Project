@@ -1,5 +1,0 @@
-
-Serial Number: 529, Name: Jaden Riley, Next of Kin: Michael, Weight: 210 lbs, Pay Rate: 10 $/hr
-Serial Number: 457, Name: Draken Deuel, Next of Kin: Jaden's mom, Weight: 225 lbs, Pay Rate: 6 $/hr
-Serial Number: 463, Name: Michael, Next of Kin: Jaden, Weight: 1000000000 lbs, Pay Rate: .1 $/hr
-

@@ -63,13 +63,13 @@ public class DOBDetector {
     // Moved out of DOB() method. Continued to Space() method.
     private static void proceedToNextFile() {
         try {
-            System.out.println("Proceeding to the Spaceship and Astronaut Menu...");
-            SpaceAstroMenu.MENU();
+            System.out.println("Proceeding to Astronaut manager...");
+            AstronautManagement.Space();
         } catch (Exception e) {
             System.out.println("Error proceeding to the next file: " + e.getMessage());
         }
     }
-
+    
     public static void setVisible(boolean b) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

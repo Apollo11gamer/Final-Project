@@ -33,10 +33,10 @@ public class EntryPointGUI {
         exitButton.setForeground(Color.RED);  // Red for alerting exit
 
         // Adding action listeners for each button
-        createUserButton.addActionListener(_ -> createUser());
-        loginButton.addActionListener(_ -> loginUser());
-        adminButton.addActionListener(_ -> accessAdmin());
-        exitButton.addActionListener(_ -> System.exit(0));
+        createUserButton.addActionListener(o -> createUser());
+        loginButton.addActionListener(o -> loginUser());
+        adminButton.addActionListener(o -> accessAdmin());
+        exitButton.addActionListener(o -> System.exit(0));
 
         // Add the buttons to the frame
         frame.add(createUserButton);

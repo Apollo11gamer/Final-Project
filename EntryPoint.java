@@ -2,7 +2,6 @@ import SubManagements.AstronautManagement;
 import SubManagements.DOBDetector;
 import SubManagements.EmailVerifier;
 import SubManagements.Launch;
-import SubManagements.SpaceAstroMenu;
 import SubManagements.SpaceshipManagement;
 import password.Password;
 
@@ -23,11 +22,9 @@ public static void main(String[] args) {
     EmailVerifier.Email();
     // Verifies if the date of birth of the astronaut is correctly written.
     DOBDetector.DOB();
-    // Lets the user create as astronaut and spaceship with details.
-    SpaceAstroMenu.MENU();
-
+    // Lets the user create an astronaut with details.
     AstronautManagement.Space();
-
+    // Lets the user create an spaceship with details.
     SpaceshipManagement.Ship();
     // Launches the user's spaceship into outer space, has the astronauts proceed with a spacewalk, then returns back to Earth.
     Launch.launch();

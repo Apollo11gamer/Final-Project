@@ -13,7 +13,7 @@ public class EntryPointGUI {
         frame.setSize(400, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new GridLayout(5, 1, 10, 10));  // Added spacing between buttons
-        frame.setResizable(false);
+        frame.setResizable(true);
 
         // Set a futuristic font with a spacey feel
         Font buttonFont = new Font("Orbitron", Font.BOLD, 14);

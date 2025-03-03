@@ -112,6 +112,10 @@ public class LaunchGUI {
                     boom.sound("LaunchControl/Music copy/Fart with reverb sound effect.wav");
                     Launch.stop();
                     TBC.sound("LaunchControl/Music copy/To Be Continued - Sound Effect [Perfect Cut].wav");
+                    explodeButton.setEnabled(false);
+                    
+                    // Call the method to start the sliding text animation
+                    rocketPanel.startSlidingTextAnimation();
                     return;
                 }
         
@@ -119,11 +123,11 @@ public class LaunchGUI {
                 updateStatus("Liftoff! Rocket is ascending...");
                 while (currentFuel > 0 || currentSpeed > 0) {
                     if (exploded) {
-                        // Stop the launch if explosion has been triggered
                         updateStatus("Launch stopped due to explosion!");
                         Launch.stop();
                         return;  // Exit the launch thread
                     }
+        
         
                     double totalMass = ROCKET_MASS + currentFuel;
                     double weight = totalMass * GRAVITY;
@@ -245,118 +249,210 @@ class RocketPanel extends JPanel {
     private double SPACEWALK_ALTITUDE = 70000;
     private boolean isRocketLaunched = false;  // Track if the rocket has launched
     private boolean isRocketExploded = false;
+    private int textX = -200;
+    private int targetTextX;
 
     public RocketPanel() {
         setPreferredSize(new Dimension(400, 500));
         setBackground(Color.BLACK);
+        targetTextX = getWidth() / 2 - 100;
     }
 
     public void setRocketAltitude(double altitude) {
         if (altitude < 0) {
-            this.rocketY = PLATFORM_Y;  // Rocket stays at the platform level before launch
+            this.rocketY = PLATFORM_Y;
         } else {
-            this.rocketY = 300 - (int) (altitude / 250);  // Update rocket's altitude after launch
+            this.rocketY = 300 - (int) (altitude / 250);
         }
         this.altitude = altitude;
 
-        // Once the rocket reaches the launch point, mark it as launched
         if (!isRocketLaunched && altitude > 0) {
-            isRocketLaunched = true;  // The rocket has been launched
+            isRocketLaunched = true;
         }
         repaint();
     }
 
-    public void explodeRocket() {
-        isRocketExploded = true;
-        repaint();  // Trigger an immediate repaint to show the explosion
+    private boolean showText = true; // Controls text visibility
+
+public void explodeRocket() {
+    isRocketExploded = true;
+    textX = -200; // Start off-screen
+    
+    Timer slideTimer = new Timer(30, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (textX < targetTextX) {
+                textX += 5;
+                if (textX >= targetTextX) {
+                    textX = targetTextX; // Stop exactly at center
+                    ((Timer) e.getSource()).stop();
+
+                    // Now start a 5.5-second timer *AFTER* it stops moving
+                    Timer hideTextTimer = new Timer(5500, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent evt) {
+                            showText = false; // Hide the text
+                            repaint();
+                        }
+                    });
+                    hideTextTimer.setRepeats(false); // Ensure it runs only once
+                    hideTextTimer.start();
+                }
+            }
+            repaint();
+        }
+    });
+
+    slideTimer.start();
+
+    
+    
+        // Timer to hide text after 5.5 seconds
+        Timer hideTextTimer = new Timer(11100, e -> {
+            showText = false; // Hide the text
+            repaint();
+            ((Timer) e.getSource()).stop();
+        });
+        hideTextTimer.setRepeats(false);
+        hideTextTimer.start();
     }
+    
+    
+    
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        // Draw dynamic background based on altitude
         drawBackground(g2d);
+        
 
-        // Draw platform only before launch (if the rocket hasn't launched)
-        if (!isRocketLaunched) {
-            drawPlatform(g2d);  // Platform is drawn before launch
-        }
-
-        // Rocket Body (Gradient for Metallic Look)
-        GradientPaint rocketBody = new GradientPaint(150, rocketY, Color.DARK_GRAY, 170, rocketY + 80, Color.LIGHT_GRAY);
-        g2d.setPaint(rocketBody);
-        g2d.fillRoundRect(150, rocketY, 40, 100, 20, 20);
-
-        // Window
-        g2d.setColor(Color.CYAN);  // Window color
-        g2d.fillOval(165, rocketY + 20, 15, 15);  // Adding a window to the rocket
-
-        // Fins (move the fins down to be under the rocket body)
-        g2d.setColor(Color.GRAY);
-        g2d.fillPolygon(new int[]{150, 140, 160}, new int[]{rocketY + 90, rocketY + 120, rocketY + 120}, 3);
-        g2d.fillPolygon(new int[]{190, 200, 180}, new int[]{rocketY + 90, rocketY + 120, rocketY + 120}, 3);
-
-        // Nose Cone
-        g2d.setColor(Color.DARK_GRAY);
-        g2d.fillPolygon(new int[]{150, 170, 190}, new int[]{rocketY, rocketY - 30, rocketY}, 3);
-
-        // Flames (Always visible)
-        drawFlames(g2d);
-
-        // If spacewalk is happening, draw and animate the astronaut
-        if (altitude >= SPACEWALK_ALTITUDE) {
-            // Update astronaut position to simulate movement
-            moveAstronaut();
-
-            // Draw astronaut next to the rocket
-            drawAstronaut(g2d, (int) astronautY);
-        }
         if (!isRocketExploded) {
-            // Normal rocket animation
-            if (!isRocketLaunched) {
-                drawPlatform(g2d);
-            }
-
-            // Draw Rocket Body
+            GradientPaint rocketBody = new GradientPaint(150, rocketY, Color.DARK_GRAY, 170, rocketY + 80, Color.LIGHT_GRAY);
             g2d.setPaint(rocketBody);
             g2d.fillRoundRect(150, rocketY, 40, 100, 20, 20);
 
-            // Rocket Fins
+            g2d.setColor(Color.CYAN);
+            g2d.fillOval(165, rocketY + 20, 15, 15);
+
             g2d.setColor(Color.GRAY);
             g2d.fillPolygon(new int[]{150, 140, 160}, new int[]{rocketY + 90, rocketY + 120, rocketY + 120}, 3);
             g2d.fillPolygon(new int[]{190, 200, 180}, new int[]{rocketY + 90, rocketY + 120, rocketY + 120}, 3);
 
-            // Rocket Nose Cone
             g2d.setColor(Color.DARK_GRAY);
             g2d.fillPolygon(new int[]{150, 170, 190}, new int[]{rocketY, rocketY - 30, rocketY}, 3);
 
-            // Rocket Flames
             drawFlames(g2d);
         } else {
-            // Explosion animation when rocket explodes
             drawExplosion(g2d);
+            drawSlidingText(g2d);
         }
 
-        // Repaint continuously to animate the astronaut
-        repaint();  // This ensures that the astronaut keeps moving by continuously repainting the panel
+        if (altitude >= SPACEWALK_ALTITUDE) {
+            moveAstronaut();
+            drawAstronaut(g2d, (int) astronautY);
+        }
+        repaint();
     }
 
     private void drawExplosion(Graphics2D g2d) {
         g2d.setColor(Color.ORANGE);
-        g2d.fillOval(150, rocketY, 100, 100); // Explosion effect
-
+        g2d.fillOval(150, rocketY, 100, 100);
         g2d.setColor(Color.RED);
-        g2d.fillOval(170, rocketY + 10, 60, 60); // Inner explosion
-
+        g2d.fillOval(170, rocketY + 10, 60, 60);
         g2d.setColor(Color.YELLOW);
-        g2d.fillOval(190, rocketY + 20, 40, 40); // Core explosion
-
-        // Optionally add fireballs or other effects
+        g2d.fillOval(190, rocketY + 20, 40, 40);
         g2d.setColor(Color.YELLOW);
         g2d.fillOval(150, rocketY - 10, 50, 50);
     }
+
+    public void drawSlidingText(Graphics2D g2d) {
+        if (!showText) return;  // Don't draw if text is not to be shown
+        
+        String message = "To Be Continued";
+        Font font = new Font("Arial", Font.BOLD, 30);
+        g2d.setFont(font);
+        g2d.setColor(Color.WHITE);
+        
+        int textWidth = g2d.getFontMetrics(font).stringWidth(message);
+        targetTextX = getWidth() / 2 - textWidth / 2; // Center the text
+
+        g2d.drawString(message, textX, getHeight() / 2);
+    }
+
+    public void startSlidingTextAnimation() {
+        // Ensure this method is invoked on the Event Dispatch Thread
+        SwingUtilities.invokeLater(() -> {
+            textX = -200; // Start the text off-screen
+
+            Timer slideTimer = new Timer(30, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (textX < targetTextX) {
+                        textX += 5; // Move text to the center
+                        if (textX >= targetTextX) {
+                            textX = targetTextX; // Stop exactly at center
+                            ((Timer) e.getSource()).stop();
+
+                            // Hide text after 5.5 seconds
+                            Timer hideTextTimer = new Timer(5500, new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent evt) {
+                                    showText = false;  // Hide the text after delay
+                                    repaint();  // Repaint to hide the text
+                                }
+                            });
+                            hideTextTimer.setRepeats(false);  // Only run once
+                            hideTextTimer.start();
+                        }
+                    }
+                    repaint(); // Keep repainting during the animation
+                }
+            });
+            
+            slideTimer.start();
+        });
+    }
+
+        public void drawSlidingText() {
+            // Ensure this method is invoked on the Event Dispatch Thread
+            SwingUtilities.invokeLater(() -> {
+                // Start the text sliding animation when launch fails
+                textX = -200; // Start off-screen
+                
+                Timer slideTimer = new Timer(30, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (textX < targetTextX) {
+                            textX += 5;  // Move text
+                            if (textX >= targetTextX) {
+                                textX = targetTextX; // Stop exactly at center
+                                ((Timer) e.getSource()).stop();
+        
+                                // Start hiding text after a delay of 5.5 seconds
+                                Timer hideTextTimer = new Timer(5500, new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent evt) {
+                                        showText = false; // Hide the text
+                                        repaint();  // Repaint to hide text
+                                    }
+                                });
+                                hideTextTimer.setRepeats(false); // Ensure it runs only once
+                                hideTextTimer.start();
+                            }
+                        }
+                        repaint(); // Repaint the panel during the animation
+                    }
+                });
+                
+                slideTimer.start();
+            });
+        
+    }
+    
+    
+    
 
     private void moveAstronaut() {
         // Move the astronaut horizontally and vertically
@@ -404,12 +500,6 @@ class RocketPanel extends JPanel {
         g2d.setColor(Color.WHITE);  // Leg color
         g2d.drawLine((int) astronautX - 5, startY + 60, (int) astronautX - 10, startY + 85);  // Left leg
         g2d.drawLine((int) astronautX + 5, startY + 60, (int) astronautX + 10, startY + 85);  // Right leg
-    }
-
-    private void drawPlatform(Graphics2D g2d) {
-        // Draw the platform (this will be drawn only before the rocket is launched)
-        g2d.setColor(Color.GRAY);
-        g2d.fillRect(0, PLATFORM_Y, getWidth(), 20);  // Draw a platform at the bottom of the screen
     }
 
     private void drawBackground(Graphics2D g2d) {

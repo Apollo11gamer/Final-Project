@@ -33,10 +33,10 @@ public class EntryPointGUI {
         exitButton.setForeground(Color.RED);  // Red for alerting exit
 
         // Adding action listeners for each button
-        createUserButton.addActionListener(o -> createUser());
-        loginButton.addActionListener(o -> loginUser());
-        adminButton.addActionListener(o -> accessAdmin());
-        exitButton.addActionListener(o -> System.exit(0));
+        createUserButton.addActionListener(_ -> createUser());
+        loginButton.addActionListener(_ -> loginUser());
+        adminButton.addActionListener(_ -> accessAdmin());
+        exitButton.addActionListener(_ -> System.exit(0));
 
         // Add the buttons to the frame
         frame.add(createUserButton);
@@ -65,11 +65,13 @@ public class EntryPointGUI {
 
         // Pulse effect via background color transition
         button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(209, 167, 241));  // Light purple (#D1A7F1)
                 button.setBorder(BorderFactory.createLineBorder(new Color(209, 167, 241), 2));  // Light purple border
                 button.setFont(button.getFont().deriveFont(16f));  // Increase font size slightly for effect
             }
+            @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(50, 50, 50));  // Dark gray background
                 button.setBorder(BorderFactory.createLineBorder(new Color(50, 50, 50), 2));  // Dark border
@@ -167,8 +169,7 @@ public class EntryPointGUI {
         // Ensuring the "Orbitron" font is available for a futuristic look
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
         }
         SwingUtilities.invokeLater(EntryPointGUI::new);
     }

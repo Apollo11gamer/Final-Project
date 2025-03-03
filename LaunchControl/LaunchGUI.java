@@ -2,7 +2,6 @@ package LaunchControl;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class LaunchGUI {
@@ -46,17 +45,14 @@ public class LaunchGUI {
         launchButton.setPreferredSize(new Dimension(0, 50));
         launchButton.setForeground(Color.GREEN);
         launchButton.setBackground(Color.DARK_GRAY);
-        launchButton.addActionListener(o -> initiateLaunch());
+        launchButton.addActionListener(_ -> initiateLaunch());
         
         explodeButton = new JButton("Explode Rocket");
         explodeButton.setPreferredSize(new Dimension(0, 50));
         explodeButton.setForeground(Color.RED);
         explodeButton.setBackground(Color.DARK_GRAY);
-        explodeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                triggerExplosion();
-            }
+        explodeButton.addActionListener((@SuppressWarnings("unused") ActionEvent e) -> {
+            triggerExplosion();
         });
 
         JPanel buttonPanel = new JPanel(new BorderLayout());
@@ -106,8 +102,8 @@ public class LaunchGUI {
         
         new Thread(() -> {
             try {
-                // Random chance for launch failure (30% chance)
-                if (Math.random() < 0.9) {
+                // Random chance for launch failure (30% chance) 1 = 100% chance
+                if (Math.random() < 0.3) {
                     updateStatus("Launch aborted due to technical failure!");
                     boom.sound("LaunchControl/Music copy/Fart with reverb sound effect.wav");
                     Launch.stop();
@@ -212,7 +208,7 @@ public class LaunchGUI {
             Thread.sleep(1000);
         }
         for (int i = 10; i >= 0; i--) {
-            updateStatus("T-" + i + " seconds...");
+            updateStatus("T-" + i + " ...");
             Thread.sleep(1000);
         }
     }
@@ -246,7 +242,7 @@ class RocketPanel extends JPanel {
 
     private int rocketY = PLATFORM_Y;  // Rocket starts at the platform level (before launch)
     private double altitude = 0;  // Current altitude
-    private double SPACEWALK_ALTITUDE = 70000;
+    private final double SPACEWALK_ALTITUDE = 70000;
     private boolean isRocketLaunched = false;  // Track if the rocket has launched
     private boolean isRocketExploded = false;
     private int textX = -200;
@@ -278,29 +274,23 @@ public void explodeRocket() {
     isRocketExploded = true;
     textX = -200; // Start off-screen
     
-    Timer slideTimer = new Timer(30, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (textX < targetTextX) {
-                textX += 5;
-                if (textX >= targetTextX) {
-                    textX = targetTextX; // Stop exactly at center
-                    ((Timer) e.getSource()).stop();
-
-                    // Now start a 5.5-second timer *AFTER* it stops moving
-                    Timer hideTextTimer = new Timer(5500, new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent evt) {
-                            showText = false; // Hide the text
-                            repaint();
-                        }
-                    });
-                    hideTextTimer.setRepeats(false); // Ensure it runs only once
-                    hideTextTimer.start();
-                }
+    Timer slideTimer = new Timer(30, (ActionEvent e) -> {
+        if (textX < targetTextX) {
+            textX += 5;
+            if (textX >= targetTextX) {
+                textX = targetTextX; // Stop exactly at center
+                ((Timer) e.getSource()).stop();
+                
+                // Now start a 5.5-second timer *AFTER* it stops moving
+                Timer hideTextTimer = new Timer(5500, (@SuppressWarnings("unused") ActionEvent evt) -> {
+                    showText = false; // Hide the text
+                    repaint();
+                });
+                hideTextTimer.setRepeats(false); // Ensure it runs only once
+                hideTextTimer.start();
             }
-            repaint();
         }
+        repaint();
     });
 
     slideTimer.start();
@@ -375,38 +365,34 @@ public void explodeRocket() {
         g2d.setFont(font);
         g2d.setColor(Color.WHITE);
         
-        // Draw the sliding text at the current position
+        int textWidth = g2d.getFontMetrics(font).stringWidth(message);
+        targetTextX = getWidth() / 2 - textWidth / 2; // Center the text
+
         g2d.drawString(message, textX, getHeight() / 2);
     }
 
     public void startSlidingTextAnimation() {
         // Ensure this method is invoked on the Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
-            textX = getWidth(); // Start the text off-screen to the right
+            textX = -200; // Start the text off-screen
 
-            Timer slideTimer = new Timer(30, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (textX > targetTextX) {
-                        textX -= 5; // Move text to the left
-                        if (textX <= targetTextX) {
-                            textX = targetTextX; // Stop exactly off-screen left
-                            ((Timer) e.getSource()).stop();
-
-                            // Hide text after 5.5 seconds
-                            Timer hideTextTimer = new Timer(5500, new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent evt) {
-                                    showText = false;  // Hide the text after delay
-                                    repaint();  // Repaint to hide the text
-                                }
-                            });
-                            hideTextTimer.setRepeats(false);  // Only run once
-                            hideTextTimer.start();
-                        }
+            Timer slideTimer = new Timer(30, (ActionEvent e) -> {
+                if (textX < targetTextX) {
+                    textX += 5; // Move text to the center
+                    if (textX >= targetTextX) {
+                        textX = targetTextX; // Stop exactly at center
+                        ((Timer) e.getSource()).stop();
+                        
+                        // Hide text after 5.5 seconds
+                        Timer hideTextTimer = new Timer(5500, (@SuppressWarnings("unused") ActionEvent evt) -> {
+                            showText = false;  // Hide the text after delay
+                            repaint();  // Repaint to hide the text
+                        });
+                        hideTextTimer.setRepeats(false);  // Only run once
+                        hideTextTimer.start();
                     }
-                    repaint(); // Keep repainting during the animation
                 }
+                repaint(); // Keep repainting during the animation
             });
             
             slideTimer.start();
@@ -419,29 +405,23 @@ public void explodeRocket() {
                 // Start the text sliding animation when launch fails
                 textX = -200; // Start off-screen
                 
-                Timer slideTimer = new Timer(30, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (textX < targetTextX) {
-                            textX += 5;  // Move text
-                            if (textX >= targetTextX) {
-                                textX = targetTextX; // Stop exactly at center
-                                ((Timer) e.getSource()).stop();
-        
-                                // Start hiding text after a delay of 5.5 seconds
-                                Timer hideTextTimer = new Timer(5500, new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent evt) {
-                                        showText = false; // Hide the text
-                                        repaint();  // Repaint to hide text
-                                    }
-                                });
-                                hideTextTimer.setRepeats(false); // Ensure it runs only once
-                                hideTextTimer.start();
-                            }
+                Timer slideTimer = new Timer(30, (ActionEvent e) -> {
+                    if (textX < targetTextX) {
+                        textX += 5;  // Move text
+                        if (textX >= targetTextX) {
+                            textX = targetTextX; // Stop exactly at center
+                            ((Timer) e.getSource()).stop();
+                            
+                            // Start hiding text after a delay of 5.5 seconds
+                            Timer hideTextTimer = new Timer(5500, (@SuppressWarnings("unused") ActionEvent evt) -> {
+                                showText = false; // Hide the text
+                                repaint();  // Repaint to hide text
+                            });
+                            hideTextTimer.setRepeats(false); // Ensure it runs only once
+                            hideTextTimer.start();
                         }
-                        repaint(); // Repaint the panel during the animation
                     }
+                    repaint(); // Repaint the panel during the animation
                 });
                 
                 slideTimer.start();

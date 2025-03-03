@@ -82,10 +82,11 @@ public class EntryPointGUI {
 
     private void checkExistingUser() {
         File file = new File(USER_DATA_FILE);
-        if (file.exists()) {
+        if (file.exists() && file.length() > 0) { // Check if file exists and has content
             createUserButton.setVisible(false);  // Hide 'Create User' if user already exists
         }
     }
+    
 
     private void createUser() {
         // Create user dialog

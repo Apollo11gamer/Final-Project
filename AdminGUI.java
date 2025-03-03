@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import javax.swing.*;
 
 public class AdminGUI {
@@ -51,11 +52,11 @@ public class AdminGUI {
         JButton exitButton = createStyledButton("Exit", buttonFont);
         exitButton.setForeground(Color.RED);
 
-        addButton.addActionListener(e -> addAstronaut());
-        removeButton.addActionListener(e -> removeAstronaut());
-        editButton.addActionListener(e -> editAstronaut());
-        changePasswordButton.addActionListener(e -> changePassword());
-        exitButton.addActionListener(e -> System.exit(0));
+        addButton.addActionListener(_ -> addAstronaut());
+        removeButton.addActionListener(_ -> removeAstronaut());
+        editButton.addActionListener(_ -> editAstronaut());
+        changePasswordButton.addActionListener(_ -> changePassword());
+        exitButton.addActionListener(_ -> System.exit(0));
 
         frame.add(nameField);
         frame.add(scrollPane);
@@ -102,12 +103,15 @@ public class AdminGUI {
     
     private void loadAdminCredentials() {
         try (BufferedReader reader = new BufferedReader(new FileReader("admin_credentials.txt"))) {
-            ADMIN_PASSWORD_HASH = reader.readLine().trim();
+            String line = reader.readLine();
+            if (line == null || line.trim().isEmpty()) throw new IOException("Empty credentials file.");
+            ADMIN_PASSWORD_HASH = line.trim();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error reading admin credentials file!", "Error", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
     }
+    
 
     private boolean authenticateAdmin() {
         String username = JOptionPane.showInputDialog("Enter Admin Username:");
@@ -126,17 +130,20 @@ public class AdminGUI {
         try (BufferedReader reader = new BufferedReader(new FileReader(ASTRONAUTS_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                astronautDatabase.put(line.trim(), line.trim());
+                String[] parts = line.split(", ", 2); // Expecting format "001, John Doe"
+                if (parts.length == 2) {
+                    astronautDatabase.put(parts[0], parts[1]); // Store serial as key, name as value
+                }
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(frame, "Error loading astronauts file!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    
     private void saveAstronautsToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ASTRONAUTS_FILE))) {
-            for (String astronaut : astronautDatabase.values()) {
-                writer.write(astronaut + "\n");
+            for (Map.Entry<String, String> entry : astronautDatabase.entrySet()) {
+                writer.write(entry.getKey() + ", " + entry.getValue() + "\n"); // Format "001, John Doe"
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(frame, "Error saving astronauts file!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -144,26 +151,50 @@ public class AdminGUI {
     }
 
     private void addAstronaut() {
-        String name = nameField.getText().trim();
-        if (name.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "Name field is required!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        astronautDatabase.put(name, name);
-        saveAstronautsToFile();
-        displayAstronautData();
+    String name = nameField.getText().trim();
+    if (name.isEmpty()) {
+        JOptionPane.showMessageDialog(frame, "Name field is required!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
     }
 
+    // Generate a unique 4-digit serial number
+    Random random = new Random();
+    String serialNumber;
+    do {
+        serialNumber = String.format("%04d", random.nextInt(10000)); // Generates 0000 - 9999
+    } while (astronautDatabase.containsKey(serialNumber)); // Ensure uniqueness
+
+    astronautDatabase.put(serialNumber, name);
+    saveAstronautsToFile();
+    displayAstronautData();
+}
+    
+    
+
     private void removeAstronaut() {
-        String name = nameField.getText().trim();
-        if (!astronautDatabase.containsKey(name)) {
-            JOptionPane.showMessageDialog(frame, "Astronaut not found!", "Error", JOptionPane.ERROR_MESSAGE);
+        String serialNumber = nameField.getText().trim(); // Now using serial number instead of name
+        if (!astronautDatabase.containsKey(serialNumber)) {
+            JOptionPane.showMessageDialog(frame, "Astronaut with this serial number not found!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        astronautDatabase.remove(name);
-        saveAstronautsToFile();
-        displayAstronautData();
+    
+        // Confirm before deletion
+        int confirmation = JOptionPane.showConfirmDialog(
+            frame,
+            "Are you sure you want to remove astronaut " + astronautDatabase.get(serialNumber) + " (Serial: " + serialNumber + ")?",
+            "Confirm Removal",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+    
+        if (confirmation == JOptionPane.YES_OPTION) {
+            astronautDatabase.remove(serialNumber);
+            saveAstronautsToFile();
+            displayAstronautData();
+            JOptionPane.showMessageDialog(frame, "Astronaut removed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
+    
 
     private void editAstronaut() {
         String name = nameField.getText().trim();
@@ -172,24 +203,49 @@ public class AdminGUI {
             return;
         }
         String newName = JOptionPane.showInputDialog("Enter new name:");
-        astronautDatabase.put(newName, astronautDatabase.remove(name));
+        if (newName == null || newName.trim().isEmpty()) return; // Prevent empty or null input
+        astronautDatabase.put(newName.trim(), astronautDatabase.remove(name));
         saveAstronautsToFile();
         displayAstronautData();
     }
+    
 
     private void changePassword() {
-        String newPassword = JOptionPane.showInputDialog("Enter New Password:");
+        JPasswordField passwordField = new JPasswordField();
+        int option = JOptionPane.showConfirmDialog(null, passwordField, "Enter Current Password:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (option != JOptionPane.OK_OPTION) return;
+    
+        String currentPassword = new String(passwordField.getPassword());
+        if (!hashPassword(currentPassword).equals(ADMIN_PASSWORD_HASH)) {
+            JOptionPane.showMessageDialog(frame, "Incorrect password! Access denied.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    
+        JPasswordField newPasswordField = new JPasswordField();
+        int newOption = JOptionPane.showConfirmDialog(null, newPasswordField, "Enter New Password:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (newOption != JOptionPane.OK_OPTION) return;
+    
+        String newPassword = new String(newPasswordField.getPassword()).trim();
+        if (newPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "Password cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    
         ADMIN_PASSWORD_HASH = hashPassword(newPassword);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("admin_credentials.txt"))) {
             writer.write(ADMIN_PASSWORD_HASH);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(frame, "Error updating credentials file!", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    
+        JOptionPane.showMessageDialog(frame, "Password changed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
+    
+    
 
     private void displayAstronautData() {
         displayArea.setText("");
-        astronautDatabase.values().forEach(astronaut -> displayArea.append(astronaut + "\n"));
+        astronautDatabase.forEach((serial, name) -> displayArea.append(serial + " - " + name + "\n"));
     }
 
     private static String hashPassword(String password) {

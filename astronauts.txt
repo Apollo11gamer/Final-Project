@@ -1,2 +1,0 @@
-Serial Number: 945, Name: Jr, Next of Kin: Mom, Weight: 200 lbs, Pay Rate: 10 $/hr
-Serial Number: 81, Name: Carol, Next of Kin: Chrissy, Weight: 128 lbs, Pay Rate: 60 $/hr

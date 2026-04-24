@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
         {
             "type": "java",
             "name": "SpaceManageGUI",
@@ -44,11 +45,7 @@
             "name": "EntryPointGUI",
             "request": "launch",
             "mainClass": "EntryPointGUI",
-<<<<<<< Updated upstream
             "projectName": "Final-Project_c0f7f328"
-=======
-            "projectName": "Final-Project_7226eddc"
->>>>>>> Stashed changes
         },
         {
             "type": "java",
@@ -165,6 +162,16 @@
             "type": "java",
             "request": "launch",
             "name": "Launch JavaFX",
+            "mainClass": "SubManagements.LaunchGUI",
+            "projectName": "Final-Project_d16c68b9",
+            "vmArgs": "--module-path C:/Users/000000021.AD.000/Downloads/openjfx-23.0.2_windows-x64_bin-sdk/javafx-sdk-23.0.2/lib --add-modules javafx.controls,javafx.fxml"
+        },
+        {
+            "type": "java",
+            "name": "LaunchGUI",
+            "request": "launch",
+            "mainClass": "SubManagements.LaunchGUI",
+            "projectName": "Final-Project_d16c68b9",
             "vmArgs": "--module-path C:/Users/000000021.AD.000/Downloads/openjfx-23.0.2_windows-x64_bin-sdk/javafx-sdk-23.0.2/lib --add-modules javafx.controls,javafx.fxml"
         }
     ]
